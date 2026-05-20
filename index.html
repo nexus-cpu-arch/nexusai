@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexusAI Dashboard</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0a14;color:#fff;font-family:system-ui,sans-serif;display:flex;min-height:100vh}
+    .sidebar{position:fixed;left:0;top:0;height:100%;width:220px;background:rgba(255,255,255,0.02);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;z-index:20}
+    .main{margin-left:220px;flex:1;min-height:100vh}
+    .glass{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
+    input,select,textarea{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;outline:none;font-family:inherit}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.25)}
+    input:focus,select:focus{border-color:#f97316}
+    select option{background:#1a1a2e}
+    .tab{display:none}.tab.active{display:block}
+    .nav-btn{width:100%;text-align:left;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.45);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.15s}
+    .nav-btn:hover{color:#fff;background:rgba(255,255,255,0.05)}
+    .nav-btn.active{background:linear-gradient(135deg,#f97316,#ec4899);color:#fff}
+    ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+    pre{white-space:pre-wrap;word-break:break-all;font-size:11px;font-family:monospace}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div style="padding:18px;border-bottom:1px solid rgba(255,255,255,0.05)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f97316,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px">N</div>
+      <div>
+        <div style="font-weight:800;font-size:13px">NexusAI</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.25)">AI Sales Dashboard</div>
+      </div>
+    </div>
+  </div>
+  <nav style="flex:1;padding:10px;display:flex;flex-direction:column;gap:4px;margin-top:8px">
+    <button class="nav-btn active" id="nav-overview" onclick="showTab('overview')">📊 Overview</button>
+    <button class="nav-btn" id="nav-deploy" onclick="showTab('deploy')">🚀 Deploy Agent</button>
+    <button class="nav-btn" id="nav-clients" onclick="showTab('clients')">🏢 Clients</button>
+    <button class="nav-btn" id="nav-leads" onclick="showTab('leads')">👥 Leads</button>
+  </nav>
+  <div style="padding:10px;border-top:1px solid rgba(255,255,255,0.05)">
+    <a href="https://nexusai-site-phoenix.netlify.app" target="_blank"
+      style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;border:1px solid rgba(249,115,22,0.3);color:#fb923c;font-size:12px;font-weight:600;text-decoration:none">
+      🌐 View Marketing Site
+    </a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- OVERVIEW TAB -->
+  <div id="tab-overview" class="tab active" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Good day, Phoenix 👋</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">Your AI Sales Agent performance</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px">
+      <div class="glass" style="border-radius:14px;padding:18px">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Active Clients</div>
+        <div id="statClients" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#4ade80;margin-top:4px">Deployed widgets</div>
+      </div>
+      <div class="glass" style="border-radius:14px;padding:18px">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Total Leads</div>
+        <div id="statLeads" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#60a5fa;margin-top:4px">Captured via widgets</div>
+      </div>
+      <div class="glass" style="border-radius:14px;padding:18px">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Qualified</div>
+        <div id="statQualified" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#c084fc;margin-top:4px">High-intent leads</div>
+      </div>
+      <div class="glass" style="border-radius:14px;padding:18px">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Conversations</div>
+        <div id="statConversations" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#fb923c;margin-top:4px">Active chats</div>
+      </div>
+    </div>
+    <div class="glass" style="border-radius:18px;padding:22px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <h2 style="font-size:15px;font-weight:700">Recent Deployments</h2>
+        <button onclick="showTab('deploy')" style="font-size:12px;padding:7px 14px;border-radius:18px;background:rgba(249,115,22,0.15);color:#fb923c;border:none;cursor:pointer;font-weight:600">+ New Deployment</button>
+      </div>
+      <div id="recentClients"><div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:28px">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- DEPLOY TAB -->
+  <div id="tab-deploy" class="tab" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Deploy AI Sales Agent</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">Register a new client widget and get their embed code</p>
+    <div style="max-width:600px">
+
+      <!-- FORM -->
+      <div id="deployFormWrap">
+        <div class="glass" style="border-radius:18px;padding:22px;margin-bottom:14px">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px">Client Details</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Company Name *</label>
+              <input id="f_company" type="text" placeholder="Acme Corp" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Website *</label>
+              <input id="f_website" type="text" placeholder="https://acmecorp.com" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Industry</label>
+              <input id="f_industry" type="text" placeholder="e.g. SaaS, Real Estate" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Agent Name</label>
+              <input id="f_agent" type="text" placeholder="Nova" value="Nova" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Handoff Email *</label>
+            <input id="f_email" type="email" placeholder="client@company.com" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            <div style="font-size:10px;color:rgba(255,255,255,0.18);margin-top:4px">Qualified leads will be forwarded here</div>
+          </div>
+        </div>
+
+        <div class="glass" style="border-radius:18px;padding:22px;margin-bottom:14px">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px">Widget Appearance</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Brand Color</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="f_color" value="#f97316" style="width:42px;height:40px;border-radius:8px;cursor:pointer;padding:2px;border:1px solid rgba(255,255,255,0.1)"/>
+                <input type="text" id="f_colorText" value="#f97316" style="flex:1;border-radius:9px;padding:9px 12px;font-size:13px"/>
+              </div>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Widget Position</label>
+              <select id="f_position" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px">
+                <option value="bottom-right">Bottom Right</option>
+                <option value="bottom-left">Bottom Left</option>
+                <option value="top-right">Top Right</option>
+                <option value="top-left">Top Left</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="deployError" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px;color:#fca5a5;font-size:12px;margin-bottom:12px"></div>
+        <button id="deployBtn" onclick="doRegister()" style="width:100%;background:linear-gradient(135deg,#f97316,#ec4899);color:#fff;font-weight:700;padding:15px;border-radius:12px;font-size:15px;border:none;cursor:pointer">🚀 Register &amp; Get Embed Code</button>
+      </div>
+
+      <!-- SUCCESS -->
+      <div id="deploySuccess" style="display:none">
+        <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);border-radius:18px;padding:22px;margin-bottom:14px;text-align:center">
+          <div style="font-size:36px;margin-bottom:10px">🎉</div>
+          <h2 style="font-size:18px;font-weight:800;margin-bottom:4px">Widget Created!</h2>
+          <p style="color:rgba(255,255,255,0.4);font-size:13px">Widget ID: <span id="resultWidgetId" style="color:#4ade80;font-family:monospace;font-weight:700"></span></p>
+        </div>
+        <div class="glass" style="border-radius:18px;padding:22px;margin-bottom:14px">
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.3);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">📋 Your Embed Code</div>
+          <div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:14px;margin-bottom:10px">
+            <pre id="resultEmbed" style="color:#4ade80;font-size:11px"></pre>
+          </div>
+          <button onclick="copyEmbed()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 18px;border-radius:9px;font-size:12px;cursor:pointer;font-weight:600">📋 Copy Embed Code</button>
+        </div>
+        <div class="glass" style="border-radius:14px;padding:18px;margin-bottom:14px">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.7">
+            <strong style="color:#fff">How to install:</strong><br/>
+            1. Copy the embed code above<br/>
+            2. Paste it just before <code style="color:#fb923c">&lt;/body&gt;</code> on your website<br/>
+            3. The AI agent chat widget will appear instantly 🚀
+          </div>
+        </div>
+        <button onclick="resetDeploy()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);padding:11px 20px;border-radius:10px;font-size:13px;cursor:pointer">← Deploy Another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTS TAB -->
+  <div id="tab-clients" class="tab" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Clients</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">All deployed AI sales agents</p>
+    <div id="clientsList"><div style="color:rgba(255,255,255,0.25);text-align:center;padding:48px">Loading...</div></div>
+  </div>
+
+  <!-- LEADS TAB -->
+  <div id="tab-leads" class="tab" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Leads</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">All captured leads from deployed widgets</p>
+    <div id="leadsList"><div style="color:rgba(255,255,255,0.25);text-align:center;padding:48px">Loading...</div></div>
+  </div>
+
+</div>
+
+<script>
+const API = 'https://6a070c2e1b2d3fb43fda5d79.base44.app/functions';
+let currentEmbed = '';
+
+// ---- TAB NAVIGATION ----
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  if (name === 'overview') loadOverview();
+  if (name === 'clients') loadClients();
+  if (name === 'leads') loadLeads();
+}
+
+// ---- COLOR SYNC ----
+document.getElementById('f_color').addEventListener('input', function() {
+  document.getElementById('f_colorText').value = this.value;
+});
+document.getElementById('f_colorText').addEventListener('input', function() {
+  if (/^#[0-9a-fA-F]{6}$/.test(this.value)) {
+    document.getElementById('f_color').value = this.value;
+  }
+});
+
+// ---- REGISTER WIDGET ----
+function doRegister() {
+  var company = document.getElementById('f_company').value.trim();
+  var website = document.getElementById('f_website').value.trim();
+  var email   = document.getElementById('f_email').value.trim();
+  var errEl   = document.getElementById('deployError');
+  var btn     = document.getElementById('deployBtn');
+
+  errEl.style.display = 'none';
+
+  if (!company) { errEl.textContent = 'Company name is required.'; errEl.style.display = 'block'; return; }
+  if (!website) { errEl.textContent = 'Website URL is required.'; errEl.style.display = 'block'; return; }
+  if (!email)   { errEl.textContent = 'Handoff email is required.'; errEl.style.display = 'block'; return; }
+
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+
+  // Generate widget ID and embed code 100% client-side
+  var slug = company.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 12);
+  var rand = Math.random().toString(36).slice(2, 8);
+  var widgetId = slug + '_' + rand;
+
+  var embedLines = [
+    '<!-- NexusAI Sales Agent Widget -->',
+    '<script>',
+    '(function() {',
+    '  window.__NEXUSAI_WIDGET_ID__ = "' + widgetId + '";',
+    '  window.__NEXUSAI_API__ = "' + API + '";',
+    '  var s = document.createElement("script");',
+    '  s.src = "' + API + '/widgetLoader?widget_id=' + widgetId + '";',
+    '  s.async = true;',
+    '  document.head.appendChild(s);',
+    '})();',
+    '<\/script>'
+  ];
+  currentEmbed = embedLines.join('\n');
+
+  document.getElementById('resultWidgetId').textContent = widgetId;
+  document.getElementById('resultEmbed').textContent = currentEmbed;
+  document.getElementById('deployFormWrap').style.display = 'none';
+  document.getElementById('deploySuccess').style.display = 'block';
+
+  btn.textContent = '🚀 Register & Get Embed Code';
+  btn.disabled = false;
+
+  // Save to backend (fire and forget — won't block the UI)
+  var industry = document.getElementById('f_industry').value.trim();
+  var agentName = document.getElementById('f_agent').value.trim() || 'Nova';
+  var color = document.getElementById('f_color').value;
+  var position = document.getElementById('f_position').value;
+
+  fetch(API + '/registerWidget', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      company_name: company,
+      company_website: website,
+      company_industry: industry,
+      agent_name: agentName,
+      handoff_email: email,
+      primary_color: color,
+      position: position,
+      widget_id: widgetId,
+      embed_code: currentEmbed
+    })
+  }).catch(function() {});
+}
+
+function copyEmbed() {
+  navigator.clipboard.writeText(currentEmbed).then(function() {
+    alert('Embed code copied to clipboard!');
+  }).catch(function() {
+    // Fallback
+    var ta = document.createElement('textarea');
+    ta.value = currentEmbed;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Copied!');
+  });
+}
+
+function resetDeploy() {
+  document.getElementById('deployFormWrap').style.display = 'block';
+  document.getElementById('deploySuccess').style.display = 'none';
+  document.getElementById('f_company').value = '';
+  document.getElementById('f_website').value = '';
+  document.getElementById('f_industry').value = '';
+  document.getElementById('f_agent').value = 'Nova';
+  document.getElementById('f_email').value = '';
+  document.getElementById('deployError').style.display = 'none';
+}
+
+// ---- LOAD OVERVIEW ----
+async function loadOverview() {
+  try {
+    var res = await fetch(API + '/listWidgets');
+    var wd = await res.json();
+    var widgets = wd.data || [];
+    document.getElementById('statClients').textContent = widgets.length;
+
+    var r2 = await fetch(API + '/listLeads');
+    var ld = await r2.json();
+    var leads = ld.data || [];
+    document.getElementById('statLeads').textContent = leads.length;
+    document.getElementById('statQualified').textContent = leads.filter(function(l){ return l.status === 'qualified'; }).length;
+    document.getElementById('statConversations').textContent = leads.filter(function(l){ return l.status === 'contacted'; }).length;
+
+    var rc = document.getElementById('recentClients');
+    if (!widgets.length) {
+      rc.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:28px">No clients yet — <button onclick="showTab(\'deploy\')" style="color:#fb923c;background:none;border:none;cursor:pointer;text-decoration:underline">deploy your first agent</button></div>';
+    } else {
+      rc.innerHTML = widgets.slice(0, 5).map(function(w) {
+        var initial = (w.company_name || '?')[0].toUpperCase();
+        var color = w.primary_color || '#f97316';
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:6px">' +
+          '<div style="display:flex;align-items:center;gap:10px">' +
+          '<div style="width:34px;height:34px;border-radius:9px;background:' + color + '22;color:' + color + ';display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px">' + initial + '</div>' +
+          '<div><div style="font-weight:600;font-size:13px">' + (w.company_name || '') + '</div><div style="font-size:11px;color:rgba(255,255,255,0.25)">' + (w.company_website || '') + '</div></div>' +
+          '</div><span style="font-size:11px;padding:3px 9px;border-radius:18px;background:rgba(74,222,128,0.1);color:#4ade80">● Live</span></div>';
+      }).join('');
+    }
+  } catch(e) {
+    ['statClients','statLeads','statQualified','statConversations'].forEach(function(id){ document.getElementById(id).textContent='0'; });
+  }
+}
+
+// ---- LOAD CLIENTS ----
+async function loadClients() {
+  var el = document.getElementById('clientsList');
+  try {
+    var res = await fetch(API + '/listWidgets');
+    var data = await res.json();
+    var list = data.data || [];
+    if (!list.length) {
+      el.innerHTML = '<div style="color:rgba(255,255,255,0.25);text-align:center;padding:48px">No clients yet. <button onclick="showTab(\'deploy\')" style="color:#fb923c;background:none;border:none;cursor:pointer;text-decoration:underline">Deploy your first agent →</button></div>';
+      return;
+    }
+    el.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">' +
+      list.map(function(w) {
+        var c = w.primary_color || '#f97316';
+        var init = (w.company_name||'?')[0];
+        return '<div class="glass" style="border-radius:16px;padding:18px">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
+          '<div style="display:flex;align-items:center;gap:10px">' +
+          '<div style="width:38px;height:38px;border-radius:10px;background:' + c + '22;color:' + c + ';display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px">' + init + '</div>' +
+          '<div><div style="font-weight:700;font-size:13px">' + (w.company_name||'') + '</div><div style="font-size:11px;color:rgba(255,255,255,0.25)">' + (w.agent_name||'Nova') + '</div></div></div>' +
+          '<span style="font-size:11px;padding:3px 9px;border-radius:18px;background:rgba(74,222,128,0.1);color:#4ade80">● Live</span></div>' +
+          '<div style="font-size:11px;color:rgba(255,255,255,0.25);margin-bottom:8px">' + (w.company_website||'') + '</div>' +
+          '<div style="background:rgba(0,0,0,0.3);border-radius:7px;padding:7px 10px">' +
+          '<div style="font-size:10px;color:rgba(255,255,255,0.2);margin-bottom:2px">Widget ID</div>' +
+          '<div style="font-family:monospace;font-size:11px;color:#fb923c">' + (w.widget_id||'') + '</div></div></div>';
+      }).join('') + '</div>';
+  } catch(e) {
+    el.innerHTML = '<div style="color:#fca5a5;text-align:center;padding:32px">Failed to load clients.</div>';
+  }
+}
+
+// ---- LOAD LEADS ----
+async function loadLeads() {
+  var el = document.getElementById('leadsList');
+  try {
+    var res = await fetch(API + '/listLeads');
+    var data = await res.json();
+    var list = data.data || [];
+    if (!list.length) {
+      el.innerHTML = '<div style="color:rgba(255,255,255,0.25);text-align:center;padding:48px">No leads captured yet.</div>';
+      return;
+    }
+    el.innerHTML = list.map(function(l) {
+      var init = (l.name||'?')[0].toUpperCase();
+      var statusColor = l.status === 'qualified' ? '#4ade80' : 'rgba(255,255,255,0.4)';
+      var statusBg = l.status === 'qualified' ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.05)';
+      return '<div class="glass" style="border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">' +
+        '<div style="display:flex;align-items:center;gap:10px">' +
+        '<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">' + init + '</div>' +
+        '<div><div style="font-weight:600;font-size:13px">' + (l.name||'Unknown') + '</div><div style="font-size:11px;color:rgba(255,255,255,0.25)">' + (l.email||'') + '</div></div></div>' +
+        '<span style="font-size:11px;padding:3px 9px;border-radius:18px;background:' + statusBg + ';color:' + statusColor + '">' + (l.status||'new') + '</span></div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="color:#fca5a5;text-align:center;padding:32px">Failed to load leads.</div>';
+  }
+}
+
+// Load overview on start
+loadOverview();
+</script>
+</body>
+</html>
