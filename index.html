@@ -240,14 +240,14 @@ function doRegister() {
   var rand = Math.random().toString(36).slice(2, 8);
   var widgetId = slug + '_' + rand;
 
+  var WIDGET_SRC = 'https://phoenixmedia005-cpu.github.io/nexusai-widget/widget.js';
   var embedLines = [
     '<!-- NexusAI Sales Agent Widget -->',
     '<script>',
     '(function() {',
     '  window.__NEXUSAI_WIDGET_ID__ = "' + widgetId + '";',
-    '  window.__NEXUSAI_API__ = "' + API + '";',
     '  var s = document.createElement("script");',
-    '  s.src = "' + API + '/widgetLoader?widget_id=' + widgetId + '";',
+    '  s.src = "' + WIDGET_SRC + '?widget_id=' + widgetId + '";',
     '  s.async = true;',
     '  document.head.appendChild(s);',
     '})();',
