@@ -1,213 +1,326 @@
 /*
- * NexusAI Sales Agent Widget
- * Hosted at: https://nexusai-dashboard-phoenix.netlify.app/widget.js
- * Usage: <script src="https://nexusai-dashboard-phoenix.netlify.app/widget.js?widget_id=YOUR_ID"></script>
+ * NexusAI Sales Agent Widget v2.0
+ * Orange bubble — always visible — auto-opens on load
  */
 (function() {
   if (window.__NEXUSAI_LOADED__) return;
   window.__NEXUSAI_LOADED__ = true;
 
-  // Get config from script tag or global vars
-  var scriptTag = document.currentScript ||
-    (function() {
-      var scripts = document.getElementsByTagName('script');
-      return scripts[scripts.length - 1];
-    })();
+  var scriptTag = document.currentScript || (function() {
+    var scripts = document.getElementsByTagName('script');
+    return scripts[scripts.length - 1];
+  })();
 
   var scriptSrc = scriptTag ? scriptTag.src : '';
   var urlParams = new URLSearchParams(scriptSrc.split('?')[1] || '');
   var WIDGET_ID = window.__NEXUSAI_WIDGET_ID__ || urlParams.get('widget_id') || 'default';
-  var API_BASE = 'https://nexusai-chat-api.phoenixmedia005-cpu.workers.dev';
-  var PRIMARY = '#f97316';
+  var API_BASE  = 'https://6a070c2e1b2d3fb43fda5d79.base44.app/functions';
+  var PRIMARY   = '#f97316';
   var AGENT_NAME = 'Nova';
   var sessionId = 'sess_' + Math.random().toString(36).slice(2, 10);
-  var messages = [];
-  var isOpen = false;
-  var isTyping = false;
-  var leadCaptured = false;
+  var messages  = [];
+  var isOpen    = false;
+  var isTyping  = false;
+  var stage     = 'Greeting';
 
-  // ---- STYLES ----
+  /* ---- STYLES ---- */
   var style = document.createElement('style');
-  style.textContent = [
-    '#nai-btn{position:fixed;bottom:24px;right:24px;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,' + PRIMARY + ',#ec4899);border:none;cursor:pointer;box-shadow:0 4px 24px rgba(249,115,22,0.55);z-index:2147483647;display:flex;align-items:center;justify-content:center;font-size:26px;transition:all 0.25s;animation:naiBounce 2s ease-in-out 1s}',
-    '#nai-btn:hover{transform:scale(1.12)}',
-    '@keyframes naiBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}',
-    '#nai-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#ef4444;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;display:none}',
-    '#nai-box{position:fixed;bottom:96px;right:24px;width:360px;max-height:540px;background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.6);z-index:2147483646;display:none;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;overflow:hidden;transform:translateY(10px) scale(0.97);opacity:0;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1)}',
-    '#nai-box.open{display:flex;transform:translateY(0) scale(1);opacity:1}',
-    '#nai-head{background:linear-gradient(135deg,' + PRIMARY + ',#ec4899);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}',
-    '#nai-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;margin-right:10px}',
-    '#nai-name{font-weight:700;font-size:14px;color:#fff;line-height:1.2}',
-    '#nai-status{font-size:11px;color:rgba(255,255,255,0.8)}',
-    '#nai-close{background:none;border:none;color:rgba(255,255,255,0.8);cursor:pointer;font-size:18px;padding:4px;line-height:1}',
-    '#nai-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:#0f0f1a;min-height:200px}',
-    '#nai-msgs::-webkit-scrollbar{width:3px}#nai-msgs::-webkit-scrollbar-thumb{background:#2a2a3a;border-radius:2px}',
-    '.nai-msg{max-width:84%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.55;word-wrap:break-word;animation:naiFadeIn 0.2s ease}',
-    '.nai-msg.bot{background:rgba(255,255,255,0.08);color:#e2e8f0;border-bottom-left-radius:3px;align-self:flex-start}',
-    '.nai-msg.user{background:linear-gradient(135deg,' + PRIMARY + ',#ec4899);color:#fff;border-bottom-right-radius:3px;align-self:flex-end}',
-    '@keyframes naiFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}',
-    '.nai-typing{display:flex;gap:5px;padding:10px 14px;background:rgba(255,255,255,0.08);border-radius:14px;border-bottom-left-radius:3px;align-self:flex-start}',
-    '.nai-typing span{width:7px;height:7px;background:rgba(255,255,255,0.35);border-radius:50%;animation:naiDot 1.4s infinite}',
-    '.nai-typing span:nth-child(2){animation-delay:0.2s}.nai-typing span:nth-child(3){animation-delay:0.4s}',
-    '@keyframes naiDot{0%,60%,100%{opacity:0.3;transform:scale(0.7)}30%{opacity:1;transform:scale(1)}}',
-    '#nai-form{padding:10px 12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;background:#0f0f1a;flex-shrink:0}',
-    '#nai-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:10px;padding:9px 13px;font-size:13px;outline:none;font-family:inherit;resize:none}',
-    '#nai-input:focus{border-color:' + PRIMARY + ';background:rgba(255,255,255,0.07)}',
-    '#nai-input::placeholder{color:rgba(255,255,255,0.28)}',
-    '#nai-send{background:linear-gradient(135deg,' + PRIMARY + ',#ec4899);border:none;border-radius:10px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;color:#fff}',
-    '#nai-send:disabled{opacity:0.4;cursor:not-allowed}',
-    '#nai-powered{text-align:center;padding:5px;font-size:10px;color:rgba(255,255,255,0.18);background:#0f0f1a;flex-shrink:0}',
-    '#nai-powered a{color:rgba(255,255,255,0.3);text-decoration:none}'
-  ].join('');
+  style.textContent = `
+    #nai-btn {
+      position: fixed !important;
+      bottom: 24px !important;
+      right: 24px !important;
+      width: 62px !important;
+      height: 62px !important;
+      border-radius: 50% !important;
+      background: linear-gradient(135deg, #f97316, #fb923c) !important;
+      border: none !important;
+      cursor: pointer !important;
+      box-shadow: 0 4px 20px rgba(249,115,22,0.6), 0 0 0 0 rgba(249,115,22,0.4) !important;
+      z-index: 2147483647 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: transform 0.2s, box-shadow 0.2s !important;
+      animation: naiPulse 2.5s infinite !important;
+      outline: none !important;
+      padding: 0 !important;
+    }
+    #nai-btn:hover {
+      transform: scale(1.1) !important;
+      box-shadow: 0 6px 28px rgba(249,115,22,0.75) !important;
+    }
+    #nai-btn svg {
+      width: 30px !important;
+      height: 30px !important;
+      fill: #ffffff !important;
+      display: block !important;
+    }
+    @keyframes naiPulse {
+      0%   { box-shadow: 0 4px 20px rgba(249,115,22,0.6), 0 0 0 0 rgba(249,115,22,0.4); }
+      70%  { box-shadow: 0 4px 20px rgba(249,115,22,0.6), 0 0 0 14px rgba(249,115,22,0); }
+      100% { box-shadow: 0 4px 20px rgba(249,115,22,0.6), 0 0 0 0 rgba(249,115,22,0); }
+    }
+    #nai-box {
+      position: fixed !important;
+      bottom: 100px !important;
+      right: 24px !important;
+      width: 360px !important;
+      max-height: 520px !important;
+      background: #0f0f1a !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6) !important;
+      z-index: 2147483646 !important;
+      display: none !important;
+      flex-direction: column !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+      overflow: hidden !important;
+      transition: opacity 0.25s, transform 0.25s !important;
+      opacity: 0 !important;
+      transform: translateY(12px) scale(0.97) !important;
+    }
+    #nai-box.nai-open {
+      display: flex !important;
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
+    }
+    #nai-head {
+      background: linear-gradient(135deg, #f97316, #fb923c) !important;
+      padding: 14px 16px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      flex-shrink: 0 !important;
+    }
+    #nai-avatar {
+      width: 38px !important; height: 38px !important;
+      border-radius: 50% !important;
+      background: rgba(255,255,255,0.25) !important;
+      display: flex !important; align-items: center !important; justify-content: center !important;
+      font-weight: 900 !important; font-size: 16px !important; color: #fff !important;
+      margin-right: 10px !important; flex-shrink: 0 !important;
+    }
+    #nai-name { font-weight: 700 !important; font-size: 14px !important; color: #fff !important; }
+    #nai-status { font-size: 11px !important; color: rgba(255,255,255,0.85) !important; margin-top: 2px !important; }
+    #nai-close {
+      background: none !important; border: none !important; color: rgba(255,255,255,0.85) !important;
+      cursor: pointer !important; font-size: 20px !important; padding: 2px 6px !important; line-height: 1 !important;
+    }
+    #nai-msgs {
+      flex: 1 !important; overflow-y: auto !important;
+      padding: 14px !important; display: flex !important; flex-direction: column !important;
+      gap: 8px !important; background: #0f0f1a !important; min-height: 180px !important;
+    }
+    #nai-msgs::-webkit-scrollbar { width: 3px !important; }
+    #nai-msgs::-webkit-scrollbar-thumb { background: #333 !important; border-radius: 2px !important; }
+    .nai-msg {
+      max-width: 85% !important; padding: 10px 13px !important; border-radius: 14px !important;
+      font-size: 13px !important; line-height: 1.55 !important; word-wrap: break-word !important;
+      animation: naiFadeIn 0.2s ease !important; white-space: pre-line !important;
+    }
+    .nai-msg.bot {
+      background: rgba(255,255,255,0.08) !important; color: #e2e8f0 !important;
+      border-bottom-left-radius: 3px !important; align-self: flex-start !important;
+    }
+    .nai-msg.user {
+      background: linear-gradient(135deg, #f97316, #fb923c) !important;
+      color: #fff !important; border-bottom-right-radius: 3px !important; align-self: flex-end !important;
+    }
+    @keyframes naiFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .nai-typing {
+      display: flex !important; gap: 5px !important; padding: 10px 14px !important;
+      background: rgba(255,255,255,0.08) !important; border-radius: 14px !important;
+      border-bottom-left-radius: 3px !important; align-self: flex-start !important;
+    }
+    .nai-typing span {
+      width: 7px !important; height: 7px !important;
+      background: rgba(255,255,255,0.4) !important; border-radius: 50% !important;
+      animation: naiDot 1.4s infinite !important;
+    }
+    .nai-typing span:nth-child(2) { animation-delay: 0.2s !important; }
+    .nai-typing span:nth-child(3) { animation-delay: 0.4s !important; }
+    @keyframes naiDot {
+      0%,60%,100% { opacity: 0.3; transform: scale(0.7); }
+      30% { opacity: 1; transform: scale(1); }
+    }
+    #nai-form {
+      padding: 10px 12px !important; border-top: 1px solid rgba(255,255,255,0.07) !important;
+      display: flex !important; gap: 8px !important; background: #0f0f1a !important; flex-shrink: 0 !important;
+    }
+    #nai-input {
+      flex: 1 !important; background: rgba(255,255,255,0.06) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important; color: #fff !important;
+      border-radius: 10px !important; padding: 9px 13px !important; font-size: 13px !important;
+      outline: none !important; font-family: inherit !important;
+    }
+    #nai-input:focus { border-color: #f97316 !important; }
+    #nai-input::placeholder { color: rgba(255,255,255,0.28) !important; }
+    #nai-send {
+      background: linear-gradient(135deg, #f97316, #fb923c) !important;
+      border: none !important; border-radius: 10px !important;
+      width: 40px !important; height: 40px !important; cursor: pointer !important;
+      display: flex !important; align-items: center !important; justify-content: center !important;
+      flex-shrink: 0 !important; color: #fff !important; font-size: 16px !important;
+    }
+    #nai-send:disabled { opacity: 0.4 !important; cursor: not-allowed !important; }
+    #nai-powered {
+      text-align: center !important; padding: 5px !important;
+      font-size: 10px !important; color: rgba(255,255,255,0.2) !important;
+      background: #0f0f1a !important; flex-shrink: 0 !important;
+    }
+    #nai-powered a { color: rgba(255,255,255,0.3) !important; text-decoration: none !important; }
+    @media (max-width: 420px) {
+      #nai-box { width: calc(100vw - 20px) !important; right: 10px !important; }
+    }
+  `;
   document.head.appendChild(style);
 
-  // ---- BUILD WIDGET ----
+  /* ---- BUILD BUBBLE BUTTON ---- */
   var btn = document.createElement('button');
-  btn.id = 'nai-btn';
-  btn.innerHTML = '💬<span id="nai-badge">1</span>';
-  btn.title = 'Chat with us';
+  btn.id  = 'nai-btn';
+  btn.setAttribute('aria-label', 'Chat with us');
+  btn.title = 'Chat with Nova';
+  // SVG chat icon
+  btn.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>';
 
+  /* ---- BUILD CHAT BOX ---- */
   var box = document.createElement('div');
   box.id = 'nai-box';
   box.innerHTML =
     '<div id="nai-head">' +
       '<div style="display:flex;align-items:center">' +
         '<div id="nai-avatar">N</div>' +
-        '<div><div id="nai-name">' + AGENT_NAME + '</div><div id="nai-status">🟢 Online — ready to help</div></div>' +
+        '<div>' +
+          '<div id="nai-name">' + AGENT_NAME + ' — AI Sales Agent</div>' +
+          '<div id="nai-status">🟢 Online now</div>' +
+        '</div>' +
       '</div>' +
-      '<button id="nai-close" title="Close">✕</button>' +
+      '<button id="nai-close" aria-label="Close">✕</button>' +
     '</div>' +
     '<div id="nai-msgs"></div>' +
     '<div id="nai-form">' +
-      '<input id="nai-input" placeholder="Type your message..." autocomplete="off" maxlength="500"/>' +
-      '<button id="nai-send">➤</button>' +
+      '<input id="nai-input" type="text" placeholder="Type a message..." autocomplete="off" maxlength="500" />' +
+      '<button id="nai-send" aria-label="Send">&#10148;</button>' +
     '</div>' +
-    '<div id="nai-powered">Powered by <a href="https://nexusai-site-phoenix.netlify.app" target="_blank">NexusAI</a></div>';
+    '<div id="nai-powered">Powered by <a href="https://nexus-cpu-arch.github.io/nexusai/site/" target="_blank">NexusAI</a></div>';
 
   document.body.appendChild(btn);
   document.body.appendChild(box);
 
-  // ---- EVENTS ----
+  /* ---- OPEN / CLOSE ---- */
+  function openChat() {
+    isOpen = true;
+    box.style.display = 'flex';
+    setTimeout(function() { box.classList.add('nai-open'); }, 10);
+    // Swap bubble icon to X
+    btn.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
+    if (messages.length === 0) {
+      setTimeout(botGreet, 500);
+    }
+    setTimeout(function() {
+      var inp = document.getElementById('nai-input');
+      if (inp) inp.focus();
+    }, 350);
+  }
+
+  function closeChat() {
+    isOpen = false;
+    box.classList.remove('nai-open');
+    // Swap back to chat icon
+    btn.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>';
+    setTimeout(function() {
+      if (!isOpen) box.style.display = 'none';
+    }, 260);
+  }
+
   btn.addEventListener('click', function() {
-    toggleChat();
+    if (isOpen) closeChat(); else openChat();
   });
-
-  document.getElementById('nai-close').addEventListener('click', function() {
-    closeChat();
-  });
-
+  document.getElementById('nai-close').addEventListener('click', closeChat);
   document.getElementById('nai-send').addEventListener('click', sendMessage);
   document.getElementById('nai-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
 
-  function toggleChat() {
-    isOpen = !isOpen;
-    if (isOpen) {
-      box.style.display = 'flex';
-      setTimeout(function() { box.classList.add('open'); }, 10);
-      btn.innerHTML = '✕';
-      document.getElementById('nai-badge').style.display = 'none';
-      if (messages.length === 0) {
-        setTimeout(function() { botGreet(); }, 400);
-      }
-      setTimeout(function() { document.getElementById('nai-input').focus(); }, 300);
-    } else {
-      closeChat();
-    }
-  }
+  /* ---- AUTO-OPEN on page load ---- */
+  setTimeout(openChat, 1200);
 
-  function closeChat() {
-    box.classList.remove('open');
-    isOpen = false;
-    btn.innerHTML = '💬<span id="nai-badge" style="display:none">1</span>';
-    setTimeout(function() { box.style.display = 'none'; }, 250);
-  }
-
+  /* ---- MESSAGES ---- */
   function botGreet() {
-    renderMsg('Hi there! 👋 I\'m ' + AGENT_NAME + ', your AI sales assistant. I\'m here to help you find the right solution.', 'bot');
-    setTimeout(function() {
-      renderMsg('What brings you here today? Are you looking to:', 'bot');
-      setTimeout(function() {
-        renderMsg('• Learn about our products\n• Get a custom quote\n• Schedule a demo\n• Something else?', 'bot');
-      }, 600);
-    }, 800);
+    renderMsg('Hi there! 👋 I\'m ' + AGENT_NAME + ', your AI sales assistant. Ready to help you find the right solution!', 'bot');
   }
 
   function renderMsg(text, role) {
     var el = document.createElement('div');
     el.className = 'nai-msg ' + role;
     el.textContent = text;
-    el.style.whiteSpace = 'pre-line';
-    document.getElementById('nai-msgs').appendChild(el);
-    scrollDown();
+    var container = document.getElementById('nai-msgs');
+    if (container) { container.appendChild(el); scrollDown(); }
   }
 
   function showTyping() {
+    removeTyping();
     var t = document.createElement('div');
-    t.className = 'nai-typing';
-    t.id = 'nai-typing-indicator';
+    t.className = 'nai-typing'; t.id = 'nai-typing-indicator';
     t.innerHTML = '<span></span><span></span><span></span>';
-    document.getElementById('nai-msgs').appendChild(t);
-    scrollDown();
+    var c = document.getElementById('nai-msgs');
+    if (c) { c.appendChild(t); scrollDown(); }
   }
 
-  function hideTyping() {
+  function removeTyping() {
     var t = document.getElementById('nai-typing-indicator');
     if (t) t.remove();
   }
 
   function scrollDown() {
     var el = document.getElementById('nai-msgs');
-    setTimeout(function() { el.scrollTop = el.scrollHeight; }, 50);
+    if (el) setTimeout(function() { el.scrollTop = el.scrollHeight; }, 50);
   }
 
+  /* ---- SEND ---- */
   async function sendMessage() {
-    var input = document.getElementById('nai-input');
+    var input   = document.getElementById('nai-input');
     var sendBtn = document.getElementById('nai-send');
-    var text = input.value.trim();
+    var text    = input ? input.value.trim() : '';
     if (!text || isTyping) return;
 
     input.value = '';
     renderMsg(text, 'user');
     messages.push({ role: 'user', content: text });
     isTyping = true;
-    sendBtn.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
     showTyping();
 
     try {
-      var resp = await fetch(API_BASE + '/chat', {
+      var resp = await fetch(API_BASE + '/captureLeadAndChat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          widget_id: WIDGET_ID,
-          session_id: sessionId,
-          message: text,
-          history: messages,
-          page_url: window.location.href,
-          page_title: document.title
+          widget_id:       WIDGET_ID,
+          session_id:      sessionId,
+          visitor_message: text,
+          current_stage:   stage,
+          page_url:        window.location.href
         })
       });
       var data = await resp.json();
-      hideTyping();
-      var reply = (data && data.reply) ? data.reply : 'Thank you! Our team will follow up with you shortly. 😊';
+      removeTyping();
+      var reply = (data && data.reply) ? data.reply : 'Thanks for reaching out! Our team will follow up soon. 😊';
+      if (data && data.stage) stage = data.stage;
       renderMsg(reply, 'bot');
       messages.push({ role: 'assistant', content: reply });
     } catch(e) {
-      hideTyping();
-      renderMsg('Thanks for reaching out! Our team will get back to you very soon. 😊', 'bot');
+      removeTyping();
+      renderMsg('Thanks for your message! Our team will get back to you shortly. 😊', 'bot');
     }
 
     isTyping = false;
-    sendBtn.disabled = false;
-    input.focus();
+    if (sendBtn) sendBtn.disabled = false;
+    if (input) input.focus();
   }
-
-  // Auto-open the chat 1.5 seconds after page load
-  setTimeout(function() {
-    if (!isOpen) {
-      toggleChat();
-    }
-  }, 1500);
 
 })();
