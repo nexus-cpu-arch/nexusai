@@ -183,6 +183,18 @@
       footer { padding: 28px 20px; flex-direction: column; text-align: center; }
     }
   </style>
+  <!-- Google Analytics G-X7JE502HGZ -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X7JE502HGZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-X7JE502HGZ');
+    // Custom NexusAI event helpers
+    window.naiTrack = function(action, category, label) {
+      gtag('event', action, { event_category: category, event_label: label });
+    };
+  </script>
 </head>
 <body>
 
