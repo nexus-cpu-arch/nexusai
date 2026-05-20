@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexusAI Dashboard</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0a14;color:#fff;font-family:system-ui,sans-serif;display:flex;min-height:100vh}
+    .sidebar{position:fixed;left:0;top:0;height:100%;width:220px;background:rgba(255,255,255,0.02);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;z-index:20}
+    .main{margin-left:220px;flex:1;min-height:100vh}
+    .glass{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
+    input,select,textarea{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;outline:none;font-family:inherit}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.25)}
+    input:focus,select:focus{border-color:#f97316}
+    select option{background:#1a1a2e}
+    .tab{display:none}.tab.active{display:block}
+    .nav-btn{width:100%;text-align:left;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.45);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.15s}
+    .nav-btn:hover{color:#fff;background:rgba(255,255,255,0.05)}
+    .nav-btn.active{background:linear-gradient(135deg,#f97316,#ec4899);color:#fff}
+    ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+    pre{white-space:pre-wrap;word-break:break-all;font-size:11px;font-family:monospace}
+    .funnel-bar-wrap{background:rgba(255,255,255,0.05);border-radius:8px;height:12px;overflow:hidden;flex:1}
+    .funnel-bar{height:100%;border-radius:8px;transition:width 1s ease}
+    .stat-card{border-radius:14px;padding:18px}
+    .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div style="padding:18px;border-bottom:1px solid rgba(255,255,255,0.05)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f97316,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px">N</div>
+      <div>
+        <div style="font-weight:800;font-size:13px">NexusAI</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.25)">AI Sales Dashboard</div>
+      </div>
+    </div>
+  </div>
+  <nav style="flex:1;padding:10px;display:flex;flex-direction:column;gap:4px;margin-top:8px">
+    <button class="nav-btn active" id="nav-overview"  onclick="showTab('overview')">📊 Overview</button>
+    <button class="nav-btn"        id="nav-funnel"    onclick="showTab('funnel')">🔻 Conversion Funnel</button>
+    <button class="nav-btn"        id="nav-deploy"    onclick="showTab('deploy')">🚀 Deploy Agent</button>
+    <button class="nav-btn"        id="nav-clients"   onclick="showTab('clients')">🏢 Clients</button>
+    <button class="nav-btn"        id="nav-leads"     onclick="showTab('leads')">👥 Leads</button>
+  </nav>
+  <div style="padding:10px;border-top:1px solid rgba(255,255,255,0.05);display:flex;flex-direction:column;gap:6px">
+    <a href="https://nexus-cpu-arch.github.io/nexusai/site/" target="_blank"
+      style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;border:1px solid rgba(249,115,22,0.3);color:#fb923c;font-size:12px;font-weight:600;text-decoration:none">
+      🌐 Marketing Site
+    </a>
+    <a href="https://analytics.google.com" target="_blank"
+      style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-size:12px;font-weight:600;text-decoration:none">
+      📈 Google Analytics
+    </a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ══════════════ OVERVIEW TAB ══════════════ -->
+  <div id="tab-overview" class="tab active" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Good day, Phoenix 👋</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">Your AI Sales Agent performance at a glance</p>
+
+    <!-- KPI Cards -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px">
+      <div class="glass stat-card">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Active Clients</div>
+        <div id="statClients" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#4ade80;margin-top:4px">Deployed widgets</div>
+      </div>
+      <div class="glass stat-card">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Total Leads</div>
+        <div id="statLeads" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#60a5fa;margin-top:4px">Captured via widgets</div>
+      </div>
+      <div class="glass stat-card">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Qualified</div>
+        <div id="statQualified" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#c084fc;margin-top:4px">High-intent leads</div>
+      </div>
+      <div class="glass stat-card">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px">Conversion Rate</div>
+        <div id="statConvRate" style="font-size:30px;font-weight:900">—</div>
+        <div style="font-size:11px;color:#fb923c;margin-top:4px">Visitor → Lead</div>
+      </div>
+    </div>
+
+    <!-- Mini Funnel Preview -->
+    <div class="glass" style="border-radius:18px;padding:22px;margin-bottom:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <h2 style="font-size:15px;font-weight:700">🔻 Conversion Funnel</h2>
+        <button onclick="showTab('funnel')" style="font-size:12px;padding:7px 14px;border-radius:18px;background:rgba(249,115,22,0.15);color:#fb923c;border:none;cursor:pointer;font-weight:600">Full Report →</button>
+      </div>
+      <div id="miniFunnel" style="display:flex;flex-direction:column;gap:10px">
+        <div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:20px">Loading funnel data...</div>
+      </div>
+    </div>
+
+    <!-- Recent Clients -->
+    <div class="glass" style="border-radius:18px;padding:22px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <h2 style="font-size:15px;font-weight:700">Recent Deployments</h2>
+        <button onclick="showTab('deploy')" style="font-size:12px;padding:7px 14px;border-radius:18px;background:rgba(249,115,22,0.15);color:#fb923c;border:none;cursor:pointer;font-weight:600">+ New</button>
+      </div>
+      <div id="recentClients"><div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:28px">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ CONVERSION FUNNEL TAB ══════════════ -->
+  <div id="tab-funnel" class="tab" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">🔻 Conversion Funnel</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">Track how website visitors become paying clients — step by step</p>
+
+    <!-- Funnel Stage Cards -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px">
+      <div class="glass" style="border-radius:14px;padding:16px;text-align:center;border-top:3px solid #60a5fa">
+        <div style="font-size:22px;margin-bottom:6px">👀</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px">Visitors</div>
+        <div id="fVisitors" style="font-size:28px;font-weight:900;margin:6px 0">—</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3)">100%</div>
+      </div>
+      <div class="glass" style="border-radius:14px;padding:16px;text-align:center;border-top:3px solid #a78bfa">
+        <div style="font-size:22px;margin-bottom:6px">💬</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px">Chat Opens</div>
+        <div id="fChats" style="font-size:28px;font-weight:900;margin:6px 0">—</div>
+        <div id="fChatsRate" style="font-size:10px;color:#a78bfa">—% of visitors</div>
+      </div>
+      <div class="glass" style="border-radius:14px;padding:16px;text-align:center;border-top:3px solid #34d399">
+        <div style="font-size:22px;margin-bottom:6px">📝</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px">Leads Captured</div>
+        <div id="fLeads" style="font-size:28px;font-weight:900;margin:6px 0">—</div>
+        <div id="fLeadsRate" style="font-size:10px;color:#34d399">—% of chats</div>
+      </div>
+      <div class="glass" style="border-radius:14px;padding:16px;text-align:center;border-top:3px solid #f59e0b">
+        <div style="font-size:22px;margin-bottom:6px">🎯</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px">Qualified</div>
+        <div id="fQualified" style="font-size:28px;font-weight:900;margin:6px 0">—</div>
+        <div id="fQualifiedRate" style="font-size:10px;color:#f59e0b">—% of leads</div>
+      </div>
+      <div class="glass" style="border-radius:14px;padding:16px;text-align:center;border-top:3px solid #f97316">
+        <div style="font-size:22px;margin-bottom:6px">💰</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px">Closed</div>
+        <div id="fClosed" style="font-size:28px;font-weight:900;margin:6px 0">—</div>
+        <div id="fClosedRate" style="font-size:10px;color:#f97316">—% of qualified</div>
+      </div>
+    </div>
+
+    <!-- Visual Bar Funnel -->
+    <div class="glass" style="border-radius:18px;padding:24px;margin-bottom:24px">
+      <h2 style="font-size:15px;font-weight:700;margin-bottom:20px">Visual Funnel</h2>
+      <div id="visualFunnel" style="display:flex;flex-direction:column;gap:14px"></div>
+    </div>
+
+    <!-- Funnel Insights -->
+    <div class="glass" style="border-radius:18px;padding:24px;margin-bottom:24px">
+      <h2 style="font-size:15px;font-weight:700;margin-bottom:16px">💡 Insights & Recommendations</h2>
+      <div id="funnelInsights" style="display:flex;flex-direction:column;gap:10px">
+        <div style="color:rgba(255,255,255,0.25);font-size:13px">Loading insights...</div>
+      </div>
+    </div>
+
+    <!-- GA Setup Banner -->
+    <div class="glass" style="border-radius:18px;padding:24px;border:1px solid rgba(249,115,22,0.2)">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:32px">📈</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px">Connect Google Analytics for Full Visitor Data</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4)">GA is already embedded in your marketing site. Add your Measurement ID below to see real visitor counts alongside your lead data.</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px">
+        <input id="gaId" type="text" placeholder="G-XXXXXXXXXX (your GA4 Measurement ID)" style="flex:1;border-radius:9px;padding:9px 13px;font-size:13px"/>
+        <button onclick="saveGaId()" style="background:linear-gradient(135deg,#f97316,#ec4899);color:#fff;border:none;padding:9px 18px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer">Save</button>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:8px">
+        📌 Get your ID: <a href="https://analytics.google.com" target="_blank" style="color:#fb923c">analytics.google.com</a> → Admin → Data Streams → Measurement ID
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ DEPLOY TAB ══════════════ -->
+  <div id="tab-deploy" class="tab" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Deploy AI Sales Agent</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">Register a new client widget and get their embed code instantly</p>
+    <div style="max-width:600px">
+      <div id="deployFormWrap">
+        <div class="glass" style="border-radius:18px;padding:22px;margin-bottom:14px">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px">Client Details</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Company Name *</label>
+              <input id="f_company" type="text" placeholder="Acme Corp" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Website *</label>
+              <input id="f_website" type="text" placeholder="https://acmecorp.com" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Industry</label>
+              <input id="f_industry" type="text" placeholder="e.g. SaaS, Real Estate" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Agent Name</label>
+              <input id="f_agent" type="text" placeholder="Nova" value="Nova" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Handoff Email *</label>
+            <input id="f_email" type="email" placeholder="client@company.com" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px"/>
+          </div>
+        </div>
+        <div class="glass" style="border-radius:18px;padding:22px;margin-bottom:14px">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px">Widget Appearance</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Brand Color</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="f_color" value="#f97316" style="width:42px;height:40px;border-radius:8px;cursor:pointer;padding:2px;border:1px solid rgba(255,255,255,0.1)"/>
+                <input type="text" id="f_colorText" value="#f97316" style="flex:1;border-radius:9px;padding:9px 12px;font-size:13px"/>
+              </div>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px">Widget Position</label>
+              <select id="f_position" style="width:100%;border-radius:9px;padding:9px 12px;font-size:13px">
+                <option value="bottom-right">Bottom Right</option>
+                <option value="bottom-left">Bottom Left</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div id="deployError" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px;color:#fca5a5;font-size:12px;margin-bottom:12px"></div>
+        <button id="deployBtn" onclick="doRegister()" style="width:100%;background:linear-gradient(135deg,#f97316,#ec4899);color:#fff;font-weight:700;padding:15px;border-radius:12px;font-size:15px;border:none;cursor:pointer">🚀 Deploy Agent & Generate Embed Code</button>
+      </div>
+      <div id="deployResult" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ CLIENTS TAB ══════════════ -->
+  <div id="tab-clients" class="tab" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">🏢 Clients</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">All deployed widgets and their performance</p>
+    <div id="clientsList"><div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:40px">Loading clients...</div></div>
+  </div>
+
+  <!-- ══════════════ LEADS TAB ══════════════ -->
+  <div id="tab-leads" class="tab" style="padding:32px">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">👥 Leads</h1>
+    <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:28px">Every prospect captured by your AI agents</p>
+    <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+      <input id="leadSearch" type="text" placeholder="🔍  Search by name, email, company..." oninput="filterLeads()" style="flex:1;min-width:200px;border-radius:9px;padding:9px 13px;font-size:13px"/>
+      <select id="leadFilter" onchange="filterLeads()" style="border-radius:9px;padding:9px 13px;font-size:13px">
+        <option value="">All Statuses</option>
+        <option value="New">New</option>
+        <option value="Qualified">Qualified</option>
+        <option value="Contacted">Contacted</option>
+        <option value="Closed">Closed</option>
+      </select>
+    </div>
+    <div id="leadsList"><div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:40px">Loading leads...</div></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+const API = 'https://6a070c2e1b2d3fb43fda5d79.base44.app/functions';
+let allLeads = [], allWidgets = [], allConversations = [];
+
+// ── TAB NAVIGATION ──
+function showTab(t) {
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+  document.getElementById('nav-' + t).classList.add('active');
+}
+
+// ── FETCH DATA ──
+async function loadData() {
+  try {
+    const [lRes, wRes, cRes] = await Promise.all([
+      fetch(API + '/listLeads'),
+      fetch(API + '/listWidgets'),
+      fetch(API + '/listLeads?type=conversations')
+    ]);
+    allLeads       = await lRes.json().then(d => Array.isArray(d) ? d : d.leads || []);
+    allWidgets     = await wRes.json().then(d => Array.isArray(d) ? d : d.widgets || []);
+    allConversations = await cRes.json().then(d => Array.isArray(d) ? d : d.leads || []);
+  } catch(e) {
+    allLeads = []; allWidgets = [];
+  }
+
+  // Filter out security alerts
+  allLeads = allLeads.filter(l =>
+    l.email !== 'security-alert@nexusai.internal' &&
+    !(l.status === 'Blocked' && l.source_website === 'SECURITY_SYSTEM')
+  );
+
+  renderOverview();
+  renderFunnel();
+  renderClients();
+  renderLeads(allLeads);
+}
+
+// ── OVERVIEW ──
+function renderOverview() {
+  const qualified = allLeads.filter(l => l.status === 'Qualified' || (l.qualification_score||0) >= 60);
+  const convRate  = allLeads.length > 0 ? Math.round((qualified.length / allLeads.length) * 100) : 0;
+
+  document.getElementById('statClients').textContent       = allWidgets.length || '0';
+  document.getElementById('statLeads').textContent         = allLeads.length || '0';
+  document.getElementById('statQualified').textContent     = qualified.length || '0';
+  document.getElementById('statConvRate').textContent      = convRate + '%';
+
+  // Mini funnel
+  const stages = [
+    { label: 'Chat Opens',     val: allLeads.length,   color: '#a78bfa' },
+    { label: 'Leads Captured', val: allLeads.filter(l => l.email || l.phone).length, color: '#34d399' },
+    { label: 'Qualified',      val: qualified.length,  color: '#f59e0b' },
+  ];
+  const maxVal = stages[0].val || 1;
+  document.getElementById('miniFunnel').innerHTML = stages.map(s => `
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:120px;font-size:12px;color:rgba(255,255,255,0.5);text-align:right">${s.label}</div>
+      <div class="funnel-bar-wrap">
+        <div class="funnel-bar" style="width:${Math.round((s.val/maxVal)*100)}%;background:${s.color}"></div>
+      </div>
+      <div style="width:36px;font-size:13px;font-weight:700;color:${s.color}">${s.val}</div>
+    </div>
+  `).join('');
+
+  // Recent clients
+  const rc = allWidgets.slice(0,5);
+  document.getElementById('recentClients').innerHTML = rc.length ? rc.map(w => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f97316,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px">${(w.company_name||'?')[0]}</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">${w.company_name||'—'}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.3)">${w.company_industry||''} · ${w.widget_id||''}</div>
+        </div>
+      </div>
+      <span class="badge" style="background:rgba(74,222,128,0.12);color:#4ade80">${w.is_active ? 'Live' : 'Inactive'}</span>
+    </div>
+  `).join('') : '<div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:20px">No deployments yet — <button onclick="showTab(\'deploy\')" style="background:none;border:none;color:#fb923c;cursor:pointer;font-size:13px">deploy your first agent</button></div>';
+}
+
+// ── CONVERSION FUNNEL ──
+function renderFunnel() {
+  const total      = Math.max(allLeads.length, 1);
+  const withContact= allLeads.filter(l => l.email || l.phone).length;
+  const qualified  = allLeads.filter(l => l.status === 'Qualified' || (l.qualification_score||0) >= 60).length;
+  const closed     = allLeads.filter(l => l.status === 'Closed').length;
+  const visitors   = total * 4; // estimate: ~25% chat open rate
+  const chats      = total;
+
+  // Update stat cards
+  document.getElementById('fVisitors').textContent    = visitors;
+  document.getElementById('fChats').textContent       = chats;
+  document.getElementById('fLeads').textContent       = withContact;
+  document.getElementById('fQualified').textContent   = qualified;
+  document.getElementById('fClosed').textContent      = closed;
+
+  document.getElementById('fChatsRate').textContent    = Math.round((chats/visitors)*100) + '% of visitors';
+  document.getElementById('fLeadsRate').textContent    = chats > 0 ? Math.round((withContact/chats)*100) + '% of chats' : '—';
+  document.getElementById('fQualifiedRate').textContent= withContact > 0 ? Math.round((qualified/withContact)*100) + '% of leads' : '—';
+  document.getElementById('fClosedRate').textContent   = qualified > 0 ? Math.round((closed/qualified)*100) + '% of qualified' : '—';
+
+  // Visual bars
+  const funnelSteps = [
+    { label: '👀 Website Visitors',  val: visitors,    pct: 100,                                        color: '#60a5fa' },
+    { label: '💬 Chat Opens',        val: chats,       pct: Math.round((chats/visitors)*100),           color: '#a78bfa' },
+    { label: '📝 Leads Captured',    val: withContact, pct: Math.round((withContact/visitors)*100),     color: '#34d399' },
+    { label: '🎯 Qualified',         val: qualified,   pct: Math.round((qualified/visitors)*100),       color: '#f59e0b' },
+    { label: '💰 Closed / Paid',     val: closed,      pct: Math.round((closed/visitors)*100),          color: '#f97316' },
+  ];
+
+  document.getElementById('visualFunnel').innerHTML = funnelSteps.map(s => `
+    <div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <span style="font-size:13px;color:#e2e8f0">${s.label}</span>
+        <span style="font-size:13px;font-weight:700;color:${s.color}">${s.val} <span style="font-weight:400;font-size:11px;color:rgba(255,255,255,0.3)">(${s.pct}%)</span></span>
+      </div>
+      <div class="funnel-bar-wrap" style="height:16px">
+        <div class="funnel-bar" style="width:${s.pct}%;background:linear-gradient(90deg,${s.color},${s.color}88)"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // Insights
+  const insights = [];
+  const chatOpenRate = Math.round((chats/visitors)*100);
+  const leadRate     = chats > 0 ? Math.round((withContact/chats)*100) : 0;
+  const qualRate     = withContact > 0 ? Math.round((qualified/withContact)*100) : 0;
+
+  if (chatOpenRate < 20) insights.push({ icon: '⚡', color: '#f59e0b', text: 'Chat open rate is ' + chatOpenRate + '%. Nova auto-opens after 1.5s — consider testing a more direct welcome message to increase engagement.' });
+  else insights.push({ icon: '✅', color: '#4ade80', text: 'Chat open rate is ' + chatOpenRate + '% — above average. Nova is grabbing attention effectively.' });
+
+  if (leadRate < 30) insights.push({ icon: '📝', color: '#f59e0b', text: 'Only ' + leadRate + '% of chats become leads. Nova could ask for contact info earlier in the conversation.' });
+  else insights.push({ icon: '✅', color: '#4ade80', text: leadRate + '% of chat visitors give their contact info — strong qualification flow.' });
+
+  if (qualRate < 40) insights.push({ icon: '🎯', color: '#60a5fa', text: 'Qualification rate is ' + qualRate + '%. Adding more discovery questions about budget and timeline can improve this.' });
+  else insights.push({ icon: '🚀', color: '#4ade80', text: qualRate + '% of leads get qualified — Nova is doing great at sorting serious buyers.' });
+
+  if (allLeads.length === 0) {
+    insights.length = 0;
+    insights.push({ icon: '🚀', color: '#fb923c', text: 'No leads yet — share your marketing site link and start driving traffic. Every visitor is a potential client!' });
+  }
+
+  document.getElementById('funnelInsights').innerHTML = insights.map(i => `
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border-left:3px solid ${i.color}">
+      <span style="font-size:18px">${i.icon}</span>
+      <span style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5">${i.text}</span>
+    </div>
+  `).join('');
+}
+
+// ── CLIENTS ──
+function renderClients() {
+  document.getElementById('clientsList').innerHTML = allWidgets.length
+    ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">` +
+      allWidgets.map(w => {
+        const wLeads = allLeads.filter(l => l.source_website === w.company_website).length;
+        return `
+        <div class="glass" style="border-radius:16px;padding:18px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,${w.primary_color||'#f97316'},#ec4899);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">${(w.company_name||'?')[0]}</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">${w.company_name||'—'}</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.3)">${w.company_industry||'General'}</div>
+            </div>
+            <span class="badge" style="margin-left:auto;background:rgba(74,222,128,0.12);color:#4ade80">${w.is_active?'Live':'Off'}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:18px;font-weight:800;color:#60a5fa">${wLeads}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3)">Leads</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:18px;font-weight:800;color:#f97316">${w.agent_name||'Nova'}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3)">Agent</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-bottom:8px">Widget ID: ${w.widget_id||'—'}</div>
+          <button onclick="copyEmbed('${(w.embed_code||'').replace(/'/g,"\\'").replace(/\n/g,'\\n')}')"
+            style="width:100%;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);color:#fb923c;padding:7px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">
+            📋 Copy Embed Code
+          </button>
+        </div>`;
+      }).join('') + '</div>'
+    : '<div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:60px">No clients yet. <button onclick="showTab(\'deploy\')" style="background:none;border:none;color:#fb923c;cursor:pointer;font-size:13px;font-weight:600">Deploy your first agent →</button></div>';
+}
+
+function copyEmbed(code) {
+  navigator.clipboard.writeText(code.replace(/\\n/g,'\n')).then(() => alert('✅ Embed code copied!'));
+}
+
+// ── LEADS ──
+function renderLeads(leads) {
+  document.getElementById('leadsList').innerHTML = leads.length
+    ? `<div style="display:flex;flex-direction:column;gap:10px">` +
+      leads.map(l => {
+        const score = l.qualification_score || 0;
+        const scoreColor = score >= 70 ? '#4ade80' : score >= 40 ? '#f59e0b' : '#f87171';
+        const statusColors = { New:'rgba(96,165,250,0.15)', Qualified:'rgba(74,222,128,0.15)', Contacted:'rgba(251,146,60,0.15)', Closed:'rgba(192,132,252,0.15)' };
+        const statusText   = { New:'#60a5fa', Qualified:'#4ade80', Contacted:'#fb923c', Closed:'#c084fc' };
+        const st = l.status||'New';
+        return `
+        <div class="glass" style="border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px">
+          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0">${(l.name||l.email||'?')[0].toUpperCase()}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:14px">${l.name||'Anonymous'}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4)">${l.email||''} ${l.phone ? '· '+l.phone : ''} ${l.company ? '· '+l.company : ''}</div>
+            ${l.pain_points ? `<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">"${l.pain_points}"</div>` : ''}
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-size:18px;font-weight:900;color:${scoreColor}">${score}</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.25)">Score</div>
+          </div>
+          <span class="badge" style="background:${statusColors[st]||'rgba(255,255,255,0.05)'};color:${statusText[st]||'#fff'};flex-shrink:0">${st}</span>
+        </div>`;
+      }).join('') + '</div>'
+    : '<div style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:60px">No leads yet — share your site link to start capturing!</div>';
+}
+
+function filterLeads() {
+  const q  = (document.getElementById('leadSearch').value||'').toLowerCase();
+  const st = document.getElementById('leadFilter').value;
+  const filtered = allLeads.filter(l => {
+    const matchQ  = !q || [l.name,l.email,l.company,l.phone].some(v => (v||'').toLowerCase().includes(q));
+    const matchSt = !st || l.status === st;
+    return matchQ && matchSt;
+  });
+  renderLeads(filtered);
+}
+
+// ── REGISTER WIDGET ──
+async function doRegister() {
+  const btn  = document.getElementById('deployBtn');
+  const errEl= document.getElementById('deployError');
+  errEl.style.display = 'none';
+
+  const company = document.getElementById('f_company').value.trim();
+  const website = document.getElementById('f_website').value.trim();
+  const email   = document.getElementById('f_email').value.trim();
+
+  if (!company || !website || !email) {
+    errEl.textContent = 'Please fill in Company Name, Website, and Handoff Email.';
+    errEl.style.display = 'block'; return;
+  }
+
+  btn.disabled = true; btn.textContent = '⏳ Deploying...';
+
+  try {
+    const resp = await fetch('https://6a070c2e1b2d3fb43fda5d79.base44.app/functions/registerWidget', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        company_name:     company,
+        company_website:  website,
+        company_industry: document.getElementById('f_industry').value.trim(),
+        agent_name:       document.getElementById('f_agent').value.trim() || 'Nova',
+        handoff_email:    email,
+        primary_color:    document.getElementById('f_colorText').value || '#f97316',
+        position:         document.getElementById('f_position').value,
+      })
+    });
+    const data = await resp.json();
+    if (data.embed_code) {
+      document.getElementById('deployFormWrap').style.display = 'none';
+      document.getElementById('deployResult').style.display   = 'block';
+      document.getElementById('deployResult').innerHTML = `
+        <div style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:18px;padding:24px;margin-bottom:16px;text-align:center">
+          <div style="font-size:36px;margin-bottom:10px">🎉</div>
+          <div style="font-weight:800;font-size:18px;margin-bottom:6px">Agent Deployed!</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5)">Widget ID: <b style="color:#4ade80">${data.widget_id}</b></div>
+        </div>
+        <div class="glass" style="border-radius:14px;padding:18px;margin-bottom:12px">
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Embed Code — paste before &lt;/body&gt;</div>
+          <pre style="background:rgba(0,0,0,0.3);border-radius:10px;padding:14px;color:#4ade80;font-size:11px">${data.embed_code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>
+        </div>
+        <button onclick="navigator.clipboard.writeText(document.querySelector('pre').textContent).then(()=>alert('✅ Copied!'))"
+          style="width:100%;background:linear-gradient(135deg,#f97316,#ec4899);color:#fff;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px">
+          📋 Copy Embed Code
+        </button>
+        <button onclick="document.getElementById('deployFormWrap').style.display='block';document.getElementById('deployResult').style.display='none';loadData();"
+          style="width:100%;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.1);padding:11px;border-radius:12px;font-size:13px;cursor:pointer">
+          Deploy Another →
+        </button>`;
+      loadData();
+    } else {
+      throw new Error(data.error || data.message || 'Unknown error');
+    }
+  } catch(e) {
+    errEl.textContent = '❌ ' + (e.message||'Failed to deploy. Try again.');
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = '🚀 Deploy Agent & Generate Embed Code';
+  }
+}
+
+// ── GA ID SAVE ──
+function saveGaId() {
+  const id = document.getElementById('gaId').value.trim();
+  if (!id) return;
+  localStorage.setItem('nexusai_ga_id', id);
+  alert('✅ GA ID saved: ' + id + '\n\nNow update your site\'s index.html to replace G-NEXUSAI001 with this ID.');
+}
+
+// ── COLOR SYNC ──
+document.addEventListener('DOMContentLoaded', function() {
+  const colorPicker = document.getElementById('f_color');
+  const colorText   = document.getElementById('f_colorText');
+  if (colorPicker) {
+    colorPicker.addEventListener('input', () => colorText.value = colorPicker.value);
+    colorText.addEventListener('input', () => { if(/^#[0-9a-f]{6}$/i.test(colorText.value)) colorPicker.value = colorText.value; });
+  }
+  // Load saved GA ID
+  const savedGa = localStorage.getItem('nexusai_ga_id');
+  if (savedGa && document.getElementById('gaId')) document.getElementById('gaId').value = savedGa;
+  loadData();
+});
+</script>
+</body>
+</html>
