@@ -44,9 +44,7 @@
     /* ─── NAV ─── */
     nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;display:flex;align-items:center;padding:0 5%;background:rgba(5,5,15,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background .3s}
     .logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
-    .logo-icon{width:30px;height:30px;border-radius:7px;background:var(--accent);display:grid;place-items:center;font-weight:900;font-size:15px;color:#fff}
-    .logo-name{font-weight:800;font-size:17px;color:#fff;letter-spacing:-0.5px}
-    .logo-name span{color:var(--accent)}
+    .logo img{height:44px;width:auto;object-fit:contain;}
     .nav-links{display:flex;gap:32px;margin:0 auto;list-style:none}
     .nav-links a{color:var(--muted2);font-size:13.5px;font-weight:500;text-decoration:none;transition:color .2s;letter-spacing:-0.1px}
     .nav-links a:hover{color:#fff}
@@ -299,8 +297,7 @@
 <!-- NAV -->
 <nav>
   <a href="#" class="logo">
-    <div class="logo-icon">B</div>
-    <div class="logo-name">Blaze<span>256</span></div>
+    <img src="https://base44.app/api/apps/6a070c2e1b2d3fb43fda5d79/files/mp/public/6a070c2e1b2d3fb43fda5d79/a12374e87_e0c7caad8_Print_Transparent.svg" alt="Blaze256" style="height:44px;width:auto;object-fit:contain;" />
   </a>
   <ul class="nav-links">
     <li><a href="#how">How It Works</a></li>
