@@ -300,6 +300,27 @@
       .how-flow{grid-template-columns:1fr}
     }
   
+    /* ─── KNOWLEDGE BASE & ANALYTICS SECTION ─── */
+    #knowledge{background:var(--dark2)}
+    .kb-split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+    .kb-panel{background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:32px;position:relative;overflow:hidden}
+    .kb-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#6366f1,#818cf8)}
+    .kb-field{margin-bottom:18px}
+    .kb-label{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+    .kb-input{background:var(--dark);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-size:13px;width:100%;resize:none}
+    .kb-tag{display:inline-block;background:rgba(99,102,241,.15);color:#818cf8;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin:3px 3px 3px 0}
+    .analytics-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+    .an-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+    .an-card-label{font-size:11px;color:var(--muted2);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+    .an-card-val{font-size:26px;font-weight:800;color:#fff;margin-bottom:4px}
+    .an-card-sub{font-size:12px;color:var(--muted2)}
+    .an-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .an-bar-label{font-size:12px;color:var(--muted2);width:140px;flex-shrink:0}
+    .an-bar-track{flex:1;height:6px;background:var(--border2);border-radius:4px;overflow:hidden}
+    .an-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#6366f1,#818cf8)}
+    .an-bar-pct{font-size:11px;color:var(--muted2);width:32px;text-align:right}
+    @media(max-width:900px){.kb-split{grid-template-columns:1fr}.analytics-cards{grid-template-columns:1fr}}
+
     /* ─── WHATSAPP AI SECTION ─── */
     #whatsappai{background:linear-gradient(180deg,var(--dark) 0%,#071a0f 100%)}
     .wai-header{text-align:center;margin-bottom:60px}
@@ -368,6 +389,7 @@
     <li><a href="#features">Features</a></li>
     <li><a href="#webadmin">Web Admin</a></li>
     <li><a href="#whatsappai">WhatsApp AI</a></li>
+    <li><a href="#knowledge">Analytics</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#demo">Live Demo</a></li>
   </ul>
@@ -492,7 +514,7 @@
         <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:8px">AI Sales Agent</div>
         <h3 style="font-size:18px;margin-bottom:12px;color:#fff">Never miss a lead again</h3>
         <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:20px">A smart chat widget on your website that talks to visitors, captures their details, qualifies them, and sends them straight to you — even at 2am.</p>
-        <div style="font-size:13px;font-weight:700;color:var(--accent)">From UGX 300,000/mo</div>
+        <div style="font-size:13px;font-weight:700;color:var(--accent)">From UGX 400,000/mo</div>
       </div>
       <!-- Product 2 -->
       <div style="background:var(--dark);border:1px solid rgba(37,211,102,0.25);border-radius:20px;padding:32px 24px;text-align:center">
@@ -500,7 +522,7 @@
         <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:#25D366;text-transform:uppercase;margin-bottom:8px">WhatsApp AI Support</div>
         <h3 style="font-size:18px;margin-bottom:12px;color:#fff">Answer customers on WhatsApp, automatically</h3>
         <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:20px">An AI trained on your business replies to WhatsApp messages for you — handling pricing questions, bookings, and FAQs around the clock, no staff needed.</p>
-        <div style="font-size:13px;font-weight:700;color:#25D366">UGX 350,000/mo</div>
+        <div style="font-size:13px;font-weight:700;color:#25D366">UGX 400,000/mo</div>
       </div>
       <!-- Product 3 -->
       <div style="background:var(--dark);border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:32px 24px;text-align:center">
@@ -508,7 +530,7 @@
         <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:#818cf8;text-transform:uppercase;margin-bottom:8px">Web Admin</div>
         <h3 style="font-size:18px;margin-bottom:12px;color:#fff">Update your website via Telegram</h3>
         <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:20px">Send a message to a Telegram bot and your website updates itself. Change prices, add blog posts, update contacts — no developer, no delay, no cost per edit.</p>
-        <div style="font-size:13px;font-weight:700;color:#818cf8">UGX 250,000/mo</div>
+        <div style="font-size:13px;font-weight:700;color:#818cf8">UGX 300,000/mo</div>
       </div>
     </div>
   </div>
@@ -672,15 +694,135 @@
     </div>
 
     <div class="wa-cta-row">
-      <button class="btn-primary" style="background:#6366f1;border-color:#6366f1;border:2px solid #6366f1;cursor:pointer;" onclick="naiTrack('cta_click','webadmin','cta');openPayModal('Web Admin',250000)">
+      <button class="btn-primary" style="background:#6366f1;border-color:#6366f1;border:2px solid #6366f1;cursor:pointer;" onclick="naiTrack('cta_click','webadmin','cta');openPayModal('Web Admin',300000)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.68 7.92c-.12.56-.48.7-.96.44l-2.64-1.96-1.28 1.24c-.14.14-.26.26-.52.26l.18-2.62 4.74-4.28c.2-.18-.04-.28-.32-.1L8.38 14.8l-2.56-.8c-.56-.18-.58-.56.12-.84l10-3.86c.46-.16.88.12.7.5z"/></svg>
-        Activate Web Admin &mdash; UGX 250K/mo
+        Activate Web Admin &mdash; UGX 300K/mo
       </button>
       <a href="#pricing" class="btn-ghost" onclick="naiTrack('cta_click','webadmin','pricing')">See pricing &rarr;</a>
     </div>
   </div>
 </section>
 
+
+<!-- KNOWLEDGE BASE & ANALYTICS SECTION -->
+<section id="knowledge">
+  <div class="sec-inner">
+    <div style="text-align:center;margin-bottom:56px">
+      <div class="sec-eyebrow" style="justify-content:center">New Features</div>
+      <h2>Train your AI. Understand your customers.</h2>
+      <p class="sec-sub" style="max-width:580px;margin:12px auto 0">Every client gets a dedicated Knowledge Base to train their AI agent, and a real-time Analytics dashboard to see exactly what customers are asking.</p>
+    </div>
+
+    <div class="kb-split">
+      <!-- LEFT: Knowledge Base Panel -->
+      <div>
+        <div class="sec-eyebrow" style="color:#818cf8;margin-bottom:16px">🧠 AI Knowledge Base</div>
+        <h3 style="font-size:clamp(20px,2.5vw,28px);margin-bottom:16px">Your agent knows your business inside out</h3>
+        <p style="font-size:14px;color:var(--muted2);line-height:1.8;margin-bottom:32px">Fill in a simple panel with your products, pricing, FAQs, and business details. Your AI agent instantly learns everything and uses it to answer customer questions with 100% accuracy.</p>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:32px">
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">📋</div>
+            <div><strong style="font-size:14px;color:#fff">Products & Services</strong><br/><span style="font-size:13px;color:var(--muted2)">List what you sell, what it costs, and who it's for</span></div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">❓</div>
+            <div><strong style="font-size:14px;color:#fff">FAQs & Common Questions</strong><br/><span style="font-size:13px;color:var(--muted2)">Pre-answer the questions you hear every day</span></div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🏢</div>
+            <div><strong style="font-size:14px;color:#fff">Business Context</strong><br/><span style="font-size:13px;color:var(--muted2)">Location, hours, policies, tone of voice — all of it</span></div>
+          </div>
+        </div>
+        <!-- Mock KB Panel -->
+        <div class="kb-panel">
+          <div class="kb-field">
+            <div class="kb-label">Business Description</div>
+            <div class="kb-input" style="min-height:48px;display:flex;align-items:center;color:rgba(255,255,255,.4);font-style:italic">We are a real estate agency in Kampala specialising in...</div>
+          </div>
+          <div class="kb-field">
+            <div class="kb-label">Services & Pricing</div>
+            <div style="display:flex;flex-wrap:wrap;margin-top:4px">
+              <span class="kb-tag">Property Listings — Free</span>
+              <span class="kb-tag">Valuation — UGX 200K</span>
+              <span class="kb-tag">Management — 8%/mo</span>
+            </div>
+          </div>
+          <div class="kb-field">
+            <div class="kb-label">Top FAQs Loaded</div>
+            <div style="display:flex;flex-wrap:wrap;margin-top:4px">
+              <span class="kb-tag" style="background:rgba(34,197,94,.12);color:#22c55e">✓ 12 FAQs active</span>
+              <span class="kb-tag" style="background:rgba(34,197,94,.12);color:#22c55e">✓ Last updated today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Analytics Dashboard -->
+      <div>
+        <div class="sec-eyebrow" style="color:#f97316;margin-bottom:16px">📊 AI Analytics</div>
+        <h3 style="font-size:clamp(20px,2.5vw,28px);margin-bottom:16px">Know what your customers really want</h3>
+        <p style="font-size:14px;color:var(--muted2);line-height:1.8;margin-bottom:32px">Your personal analytics dashboard shows which questions come up most, when customers are most active, and how your AI is performing — so you can make smarter business decisions.</p>
+
+        <!-- Mock Analytics Dashboard -->
+        <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:28px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f97316,#fb923c)"></div>
+
+          <!-- Stats row -->
+          <div class="analytics-cards" style="margin-bottom:24px">
+            <div class="an-card">
+              <div class="an-card-label">This Week</div>
+              <div class="an-card-val">247</div>
+              <div class="an-card-sub">Conversations ↑ 18%</div>
+            </div>
+            <div class="an-card">
+              <div class="an-card-label">Peak Hour</div>
+              <div class="an-card-val">2–4pm</div>
+              <div class="an-card-sub">Most active window</div>
+            </div>
+            <div class="an-card">
+              <div class="an-card-label">Leads Captured</div>
+              <div class="an-card-val">89</div>
+              <div class="an-card-sub">36% conversion rate</div>
+            </div>
+            <div class="an-card">
+              <div class="an-card-label">Avg. Response</div>
+              <div class="an-card-val">&lt;2s</div>
+              <div class="an-card-sub">AI response time</div>
+            </div>
+          </div>
+
+          <!-- Top questions bar chart -->
+          <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px">Top Customer Questions</div>
+          <div class="an-bar-row">
+            <div class="an-bar-label">What are your prices?</div>
+            <div class="an-bar-track"><div class="an-bar-fill" style="width:88%"></div></div>
+            <div class="an-bar-pct">88%</div>
+          </div>
+          <div class="an-bar-row">
+            <div class="an-bar-label">How do I get started?</div>
+            <div class="an-bar-track"><div class="an-bar-fill" style="width:72%"></div></div>
+            <div class="an-bar-pct">72%</div>
+          </div>
+          <div class="an-bar-row">
+            <div class="an-bar-label">Where are you located?</div>
+            <div class="an-bar-track"><div class="an-bar-fill" style="width:54%"></div></div>
+            <div class="an-bar-pct">54%</div>
+          </div>
+          <div class="an-bar-row">
+            <div class="an-bar-label">Do you offer delivery?</div>
+            <div class="an-bar-track"><div class="an-bar-fill" style="width:41%"></div></div>
+            <div class="an-bar-pct">41%</div>
+          </div>
+          <div class="an-bar-row">
+            <div class="an-bar-label">Can I get a discount?</div>
+            <div class="an-bar-track"><div class="an-bar-fill" style="width:29%"></div></div>
+            <div class="an-bar-pct">29%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- WHATSAPP AI SUPPORT SECTION -->
 <section id="whatsappai">
@@ -751,9 +893,9 @@
 
     <!-- CTA -->
     <div class="wai-cta-row">
-      <button style="background:linear-gradient(135deg,#25D366,#128C7E);border:none;color:#fff;padding:16px 32px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:.2s;" onclick="naiTrack('cta_click','whatsappai','cta');openPayModal('WhatsApp AI Support',350000)" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+      <button style="background:linear-gradient(135deg,#25D366,#128C7E);border:none;color:#fff;padding:16px 32px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:.2s;" onclick="naiTrack('cta_click','whatsappai','cta');openPayModal('WhatsApp AI Support',400000)" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Activate WhatsApp AI &mdash; UGX 350K/mo
+        Activate WhatsApp AI &mdash; UGX 400K/mo
       </button>
       <a href="#pricing" class="btn-ghost" onclick="naiTrack('cta_click','whatsappai','pricing')">See all pricing &rarr;</a>
     </div>
@@ -872,7 +1014,7 @@
       <div class="plan">
         <div class="plan-tier">Starter</div>
         <div class="plan-price-row">
-          <div class="plan-price">UGX 300K</div>
+          <div class="plan-price">UGX 350K</div>
           <div class="plan-period">/mo</div>
         </div>
         <div class="plan-desc">Perfect for small businesses and solo entrepreneurs ready to start capturing leads.</div>
@@ -882,9 +1024,11 @@
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Up to 100 leads/month</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Email notifications</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Lead dashboard</li>
+          <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>🧠 AI Knowledge Base panel</li>
+          <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>📊 Basic analytics (top questions)</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Standard support</li>
         </ul>
-        <button class="plan-cta ghost" onclick="naiTrack('plan_click','pricing','starter');openPayModal('Starter',300000)">Get Started</button>
+        <button class="plan-cta ghost" onclick="naiTrack('plan_click','pricing','starter');openPayModal('Starter',350000)">Get Started</button>
       </div>
 
       <!-- GROWTH -->
@@ -892,7 +1036,7 @@
         <div class="plan-badge">&#x26A1; Most Popular</div>
         <div class="plan-tier">Growth</div>
         <div class="plan-price-row">
-          <div class="plan-price">UGX 500K</div>
+          <div class="plan-price">UGX 550K</div>
           <div class="plan-period">/mo</div>
         </div>
         <div class="plan-desc">For growing businesses that need more leads, more automation, and more reach.</div>
@@ -903,9 +1047,12 @@
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>WhatsApp + Email alerts</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Lead scoring &amp; SWOT analysis</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Automated follow-ups</li>
+          <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>🧠 AI Knowledge Base panel</li>
+          <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>📊 Full AI Analytics dashboard</li>
+          <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>⏰ Peak hours &amp; conversation trends</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
         </ul>
-        <button class="plan-cta solid" onclick="naiTrack('plan_click','pricing','growth');openPayModal('Growth',500000)">Get Started</button>
+        <button class="plan-cta solid" onclick="naiTrack('plan_click','pricing','growth');openPayModal('Growth',550000)">Get Started</button>
       </div>
 
       <!-- ENTERPRISE -->
@@ -946,7 +1093,7 @@
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Instant Telegram alerts</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Auto site-down notifications</li>
         </ul>
-        <button class="plan-cta solid" style="background:#6366f1" onclick="naiTrack('plan_click','pricing','webadmin');openPayModal('Web Admin',250000)">Activate Web Admin</button>
+        <button class="plan-cta solid" style="background:#6366f1" onclick="naiTrack('plan_click','pricing','webadmin');openPayModal('Web Admin',300000)">Activate Web Admin</button>
       </div>
 
       <!-- WHATSAPP AI SUPPORT CARD -->
@@ -967,7 +1114,7 @@
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Hands off to human when needed</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Works on any website platform</li>
         </ul>
-        <button onclick="naiTrack('cta_click','pricing','whatsapp_ai');openPayModal('WhatsApp AI Support',350000)" style="background:linear-gradient(135deg,#25D366,#128C7E);border:none;color:#fff;width:100%;padding:14px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-top:auto;transition:.2s;display:block;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Activate WhatsApp AI</button>
+        <button onclick="naiTrack('cta_click','pricing','whatsapp_ai');openPayModal('WhatsApp AI Support',400000)" style="background:linear-gradient(135deg,#25D366,#128C7E);border:none;color:#fff;width:100%;padding:14px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-top:auto;transition:.2s;display:block;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Activate WhatsApp AI</button>
       </div>
 
     </div>
@@ -1252,7 +1399,7 @@ function openPayModal(plan, amount) {
   var mbox = document.querySelector('#payModal > div');
   if (plan === 'Web Admin') {
     mbox.style.borderColor = 'rgba(99,102,241,0.5)';
-    document.querySelector('#payModal > div > div:last-child > div:first-child > div:last-child').textContent = 'Web Admin Plan — UGX 250,000/mo';
+    document.querySelector('#payModal > div > div:last-child > div:first-child > div:last-child').textContent = 'Web Admin Plan — UGX 300,000/mo';
   } else {
     mbox.style.borderColor = 'rgba(249,115,22,0.3)';
   }
@@ -1466,7 +1613,7 @@ document.getElementById('payModal').addEventListener('click', function(e) {
 var WA_KB = {
   pricing: {
     keywords: ['price','pricing','cost','how much','plan','starter','growth','ugx','pay','subscription'],
-    answer: "💰 <b>Blaze256 Pricing:</b><br><br>🔥 <b>Starter</b> — UGX 300,000/mo<br>• AI Sales Agent on your site<br>• Lead capture & qualification<br>• Email support<br><br>⚡ <b>Growth</b> — UGX 500,000/mo<br>• Everything in Starter<br>• SWOT analysis per lead<br>• Automated follow-ups<br>• Priority support<br><br>🤖 <b>Web Admin Add-on</b> — UGX 250,000/mo<br>• Manage your site via Telegram<br>• Cyber Shield security monitoring<br><br>Pay via MTN MoMo or Airtel Money."
+    answer: "💰 <b>Blaze256 Pricing:</b><br><br>🔥 <b>Starter</b> — UGX 300,000/mo<br>• AI Sales Agent on your site<br>• Lead capture & qualification<br>• Email support<br><br>⚡ <b>Growth</b> — UGX 500,000/mo<br>• Everything in Starter<br>• SWOT analysis per lead<br>• Automated follow-ups<br>• Priority support<br><br>🤖 <b>Web Admin Add-on</b> — UGX 300,000/mo<br>• Manage your site via Telegram<br>• Cyber Shield security monitoring<br><br>Pay via MTN MoMo or Airtel Money."
   },
   getstarted: {
     keywords: ['get started','start','setup','install','how to','begin','sign up','signup','register','onboard'],
@@ -1474,7 +1621,7 @@ var WA_KB = {
   },
   webadmin: {
     keywords: ['web admin','webadmin','telegram','bot','content','update site','cms','edit site','manage site'],
-    answer: "🤖 <b>Web Admin — AI Site Manager:</b><br><br>Send a Telegram message → your site updates automatically!<br><br>✅ Update text, images & content<br>✅ Add blog posts & articles<br>✅ Cyber Shield security monitoring<br>✅ Works on WordPress & GitHub sites<br><br>📱 Just message <b>@blaze256admin_bot</b> on Telegram.<br><br>Add-on price: <b>UGX 250,000/mo</b>"
+    answer: "🤖 <b>Web Admin — AI Site Manager:</b><br><br>Send a Telegram message → your site updates automatically!<br><br>✅ Update text, images & content<br>✅ Add blog posts & articles<br>✅ Cyber Shield security monitoring<br>✅ Works on WordPress & GitHub sites<br><br>📱 Just message <b>@blaze256admin_bot</b> on Telegram.<br><br>Add-on price: <b>UGX 300,000/mo</b>"
   },
   wordpress: {
     keywords: ['wordpress','wix','shopify','webflow','html','website','platform','compatible','support','works with'],
