@@ -1,10 +1,10 @@
 /*
- * NexusAI Sales Agent Widget v3.0
+ * BlazeAI Sales Agent Widget v3.0
  * Nova — Intelligent Receptionist Agent
  */
 (function() {
-  if (window.__NEXUSAI_LOADED__) return;
-  window.__NEXUSAI_LOADED__ = true;
+  if (window.__BLAZEAI_LOADED__) return;
+  window.__BLAZEAI_LOADED__ = true;
 
   var scriptTag = document.currentScript || (function() {
     var scripts = document.getElementsByTagName('script');
@@ -19,17 +19,17 @@
   var isOpen     = false;
   var isTyping   = false;
 
-  // ---- NOVA'S BRAIN — Full NexusAI Knowledge Base ----
+  // ---- NOVA'S BRAIN — Full BlazeAI Knowledge Base ----
   var NOVA_CONTEXT = {
     name: "Nova",
-    role: "AI Sales Receptionist at NexusAI",
-    company: "NexusAI",
+    role: "AI Sales Receptionist at BlazeAI",
+    company: "BlazeAI",
     tagline: "Your 24/7 AI Sales Agent That Closes Deals While You Sleep",
-    what_we_do: "NexusAI provides businesses with AI-powered sales agents that automatically capture, qualify, and nurture leads from their website — 24/7, with no extra staff needed.",
+    what_we_do: "BlazeAI provides businesses with AI-powered sales agents that automatically capture, qualify, and nurture leads from their website — 24/7, with no extra staff needed.",
     how_it_works: [
       "1. You register your business and get a tiny embed code (one line of code)",
       "2. Paste it on your website — takes 2 minutes",
-      "3. NexusAI's AI agent (like me!) starts chatting with every visitor",
+      "3. BlazeAI's AI agent (like me!) starts chatting with every visitor",
       "4. We qualify leads, collect their info, and notify you instantly",
       "5. You close the deals — we handle all the front-desk work"
     ],
@@ -68,7 +68,7 @@
       return pricingAnswer(msg);
     }
     if (/what (is|does|do) nexus|what.*nexusai|tell me about|how (does|do) it work|what.*offer/.test(msg)) {
-      return "NexusAI gives your business a 24/7 AI sales agent that lives on your website 🤖\n\nIt automatically:\n• Chats with every visitor\n• Qualifies serious buyers\n• Collects their contact info\n• Sends you instant notifications\n• Follows up automatically\n\nYou just close the deals — we handle everything else. Want me to find the right plan for your business?";
+      return "BlazeAI gives your business a 24/7 AI sales agent that lives on your website 🤖\n\nIt automatically:\n• Chats with every visitor\n• Qualifies serious buyers\n• Collects their contact info\n• Sends you instant notifications\n• Follows up automatically\n\nYou just close the deals — we handle everything else. Want me to find the right plan for your business?";
     }
     if (/how.*deploy|how.*install|how.*set up|embed|code|website/.test(msg)) {
       return "Super easy! 👇\n\n1️⃣ Register your business on our site\n2️⃣ Get a tiny embed code (takes 2 min)\n3️⃣ Paste it before </body> on your website\n4️⃣ That's it — your AI agent goes live immediately!\n\nWorks on ANY website — WordPress, Wix, Squarespace, custom HTML, anything. What's your website built on?";
@@ -90,7 +90,7 @@
     switch(convState.step) {
       case 'greeting':
         convState.step = 'name';
-        return "Welcome! 👋 I'm Nova, NexusAI's AI sales assistant.\n\nI'm here to help you get your own AI sales agent running on your website — so you never miss a lead again.\n\nFirst things first — what's your name?";
+        return "Welcome! 👋 I'm Nova, BlazeAI's AI sales assistant.\n\nI'm here to help you get your own AI sales agent running on your website — so you never miss a lead again.\n\nFirst things first — what's your name?";
 
       case 'name':
         d.name = extractName(userMsg);
@@ -332,7 +332,7 @@
       '<input id="nai-input" type="text" placeholder="Type a message..." autocomplete="off" maxlength="500"/>' +
       '<button id="nai-send" aria-label="Send">&#10148;</button>' +
     '</div>' +
-    '<div id="nai-powered">Powered by <a href="https://blaze256.com/site/" target="_blank">NexusAI</a></div>';
+    '<div id="nai-powered">Powered by <a href="https://blaze256.com" target="_blank" style="color:#f97316;text-decoration:none;font-weight:600">BlazeAI ⚡</a></div>';
 
   document.body.appendChild(btn);
   document.body.appendChild(box);
@@ -376,7 +376,7 @@
 
   // ---- CONVERSATION ----
   function startConversation() {
-    typeMessage("Hi there! 👋 I'm Nova, NexusAI's AI sales assistant.\n\nI'm here to help you get your own AI sales agent running on your website — so you never miss a lead again.\n\nFirst things first — what's your name?");
+    typeMessage("Hi there! 👋 I'm Nova, BlazeAI's AI sales assistant.\n\nI'm here to help you get your own AI sales agent running on your website — so you never miss a lead again.\n\nFirst things first — what's your name?");
     convState.step = 'name';
   }
 
