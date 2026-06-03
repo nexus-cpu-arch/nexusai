@@ -268,12 +268,12 @@
     .cta-note{font-size:11.5px;color:var(--muted);text-align:right}
 
     /* ─── FOOTER ─── */
-    footer{padding:36px 5%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-    .footer-left{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+    footer{padding:36px 5%;border-top:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center}
+    .footer-left{display:flex;flex-direction:column;align-items:center;gap:8px}
     .footer-logo{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.03em}
     .footer-logo span{color:var(--accent)}
     footer p{font-size:12px;color:var(--muted)}
-    .footer-right{display:flex;align-items:center;gap:20px}
+    .footer-right{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
     .footer-link{font-size:12px;color:var(--muted);text-decoration:none;transition:color .2s}
     .footer-link:hover{color:var(--muted2)}
 
@@ -1211,15 +1211,18 @@
     <div class="footer-logo">Blaze<span>256</span></div>
     <p>© 2026 Blaze256. All rights reserved.</p>
   </div>
+  <!-- Social handles -->
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="https://x.com/Blaze_256_" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:8px 16px;border-radius:50px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      @Blaze_256_
+    </a>
+  </div>
   <div class="footer-right">
     <a href="#how" class="footer-link">How It Works</a>
     <a href="#pricing" class="footer-link">Pricing</a>
     <a href="https://wa.me/256704923640" target="_blank" class="footer-link">📱 +256 704 923 640</a>
     <a href="mailto:admin@blaze256.com" class="footer-link">✉️ admin@blaze256.com</a>
-    <a href="https://x.com/Blaze_256_" target="_blank" class="footer-link" style="display:inline-flex;align-items:center;gap:6px;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      @Blaze_256_
-    </a>
   </div>
 </footer>
 
