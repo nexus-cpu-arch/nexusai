@@ -77,7 +77,7 @@
 
     /* ─── HERO ─── */
     .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:120px 5% 80px;max-width:1280px;margin:0 auto;position:relative}
-    .hero-bg{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
     .hero-orb1{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.1) 0%,transparent 65%);top:-200px;left:-100px;filter:blur(60px)}
     .hero-orb2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.07) 0%,transparent 65%);bottom:-100px;right:-50px;filter:blur(60px)}
     .hero-grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(249,115,22,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 70% 80% at 20% 40%,#000 20%,transparent 80%)}
@@ -146,7 +146,7 @@
     /* ─── SECTION GENERIC ─── */
     section{padding:88px 5%}
     .sec-inner{max-width:1100px;margin:0 auto}
-    .sec-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+    .sec-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;justify-content:center}
     .sec-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--accent);border-radius:2px}
     h2{font-size:clamp(26px,3.5vw,44px);font-weight:800;line-height:1.1;letter-spacing:-0.035em;color:#fff;margin-bottom:14px}
     .sec-sub{font-size:15.5px;color:var(--muted2);line-height:1.7;max-width:480px}
@@ -191,7 +191,7 @@
     .demo-chrome-url{flex:1;background:rgba(255,255,255,.04);border-radius:5px;padding:4px 10px;font-size:10.5px;color:var(--muted);text-align:center;font-family:monospace}
     .demo-chat-body{padding:20px;display:flex;flex-direction:column;gap:8px}
     .demo-msg{padding:9px 14px;border-radius:12px;font-size:13px;line-height:1.55;max-width:82%}
-    .demo-msg.ai{background:rgba(255,255,255,.06);color:var(--text);border-bottom-left-radius:3px}
+    .demo-msg
     .demo-msg.user{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
     .demo-typing{display:flex;gap:4px;align-items:center;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:12px;width:fit-content;border-bottom-left-radius:3px}
     .demo-typing span{width:5px;height:5px;background:var(--muted);border-radius:50%;animation:typing .9s infinite}
@@ -220,7 +220,7 @@
     /* ─── PRICING ─── */
     #pricing{background:var(--dark2)}
     .pricing-header{text-align:center;margin-bottom:52px}
-    .pricing-header .sec-eyebrow{justify-content:center}
+    .pricing-header 
     .pricing-header h2{margin-bottom:10px}
     .pricing-header p{margin:0 auto;text-align:center}
     .pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
@@ -403,7 +403,7 @@
 
 <!-- HERO -->
 <div style="max-width:1280px;margin:0 auto;padding:0 5%">
-  <div class="hero" style="max-width:100%;padding:120px 0 80px">
+  <div class="hero">
     <div class="hero-left">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
