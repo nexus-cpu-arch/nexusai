@@ -370,7 +370,20 @@
     @media (max-width:900px){.wa-steps{grid-template-columns:repeat(2,1fr)}.wa-steps::after{display:none}.wa-bento{grid-template-columns:1fr}}
     @media (max-width:480px){.wa-steps{grid-template-columns:1fr}}
 
-  </style>
+  
+    /* ── ABSOLUTE OVERRIDES: Pricing alignment stability ── */
+    .plan-price { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .plan-price-row { align-items: baseline; gap: 4px; }
+    .pricing-grid { align-items: stretch; }
+    .plan-card { display: flex; flex-direction: column; }
+    .plan-features { flex: 1; }
+    /* Floating widget must never cover CTA buttons */
+    #wa-support-widget { isolation: isolate; }
+    /* Hero headline must always be visible */
+    .hero h1, .hero-left h1 { visibility: visible !important; opacity: 1 !important; display: block !important; }
+    /* Section headlines */
+    .sec-title { visibility: visible !important; opacity: 1 !important; }
+</style>
 </head>
 <body>
 
@@ -531,8 +544,8 @@
         <div style="font-size:36px;margin-bottom:16px">🛡️</div>
         <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:#818cf8;text-transform:uppercase;margin-bottom:8px">Web Admin</div>
         <h3 style="font-size:18px;margin-bottom:12px;color:#fff">Update your website via Telegram</h3>
-        <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:20px">Send a message to a Telegram bot and your website updates itself. Change prices, add blog posts, update contacts — no developer, no delay, no cost per edit.</p>
-        <div style="font-size:13px;font-weight:700;color:#818cf8">UGX 300,000/mo</div>
+        <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:20px">Send a message to a Telegram bot and your website updates itself. Change prices, add blog posts, update contacts — no developer, no delay — just UGX 250,000/mo.</p>
+        <div style="font-size:13px;font-weight:700;color:#818cf8">UGX 250,000/mo</div>
       </div>
     </div>
   </div>
@@ -696,9 +709,9 @@
     </div>
 
     <div class="wa-cta-row">
-      <button class="btn-primary" style="background:#6366f1;border-color:#6366f1;border:2px solid #6366f1;cursor:pointer;" onclick="naiTrack('cta_click','webadmin','cta');openPayModal('Web Admin',300000)">
+      <button class="btn-primary" style="background:#6366f1;border-color:#6366f1;border:2px solid #6366f1;cursor:pointer;" onclick="naiTrack('cta_click','webadmin','cta');openPayModal('Web Admin',250000)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.68 7.92c-.12.56-.48.7-.96.44l-2.64-1.96-1.28 1.24c-.14.14-.26.26-.52.26l.18-2.62 4.74-4.28c.2-.18-.04-.28-.32-.1L8.38 14.8l-2.56-.8c-.56-.18-.58-.56.12-.84l10-3.86c.46-.16.88.12.7.5z"/></svg>
-        Activate Web Admin &mdash; UGX 300K/mo
+        Activate Web Admin &mdash; UGX 250K/mo
       </button>
       <a href="#pricing" class="btn-ghost" onclick="naiTrack('cta_click','webadmin','pricing')">See pricing &rarr;</a>
     </div>
@@ -973,7 +986,7 @@
           </li>
         </ul>
       </div>
-      <div style="display:none">
+      <div>
         <div class="code-card">
           <div class="code-card-header">
             <div class="code-card-dots">
@@ -1095,7 +1108,7 @@
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Instant Telegram alerts</li>
           <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Auto site-down notifications</li>
         </ul>
-        <button class="plan-cta solid" style="background:#6366f1" onclick="naiTrack('plan_click','pricing','webadmin');openPayModal('Web Admin',300000)">Activate Web Admin</button>
+        <button class="plan-cta solid" style="background:#6366f1" onclick="naiTrack('plan_click','pricing','webadmin');openPayModal('Web Admin',250000)">Activate Web Admin</button>
       </div>
 
       <!-- WHATSAPP AI SUPPORT CARD -->
@@ -1376,7 +1389,7 @@ function openPayModal(plan, amount) {
   var mbox = document.querySelector('#payModal > div');
   if (plan === 'Web Admin') {
     mbox.style.borderColor = 'rgba(99,102,241,0.5)';
-    document.querySelector('#payModal > div > div:last-child > div:first-child > div:last-child').textContent = 'Web Admin Plan — UGX 300,000/mo';
+    document.querySelector('#payModal > div > div:last-child > div:first-child > div:last-child').textContent = 'Web Admin Plan — UGX 250,000/mo';
   } else {
     mbox.style.borderColor = 'rgba(249,115,22,0.3)';
   }
@@ -1487,10 +1500,10 @@ document.getElementById('payModal').addEventListener('click', function(e) {
 
 
 <!-- ========== WHATSAPP AI SUPPORT WIDGET ========== -->
-<div id="wa-support-widget" style="position:fixed;bottom:100px;right:24px;z-index:9990;font-family:'Inter',sans-serif;">
+<div id="wa-support-widget" style="position:fixed;bottom:24px;right:24px;z-index:9500;font-family:'Inter',sans-serif;pointer-events:none;">
   
   <!-- Bubble Button -->
-  <div id="wa-bubble" onclick="toggleWAChat()" style="
+  <div id="wa-bubble" onclick="toggleWAChat()" style="pointer-events:auto;
     width:56px;height:56px;
     background:linear-gradient(135deg,#25D366,#128C7E);
     border-radius:50%;
@@ -1511,6 +1524,7 @@ document.getElementById('payModal').addEventListener('click', function(e) {
 
   <!-- Chat Panel -->
   <div id="wa-chat-panel" style="
+    pointer-events:auto;
     display:none;
     position:absolute;bottom:70px;right:0;
     width:320px;
@@ -1590,7 +1604,7 @@ document.getElementById('payModal').addEventListener('click', function(e) {
 var WA_KB = {
   pricing: {
     keywords: ['price','pricing','cost','how much','plan','starter','growth','ugx','pay','subscription'],
-    answer: "💰 <b>Blaze256 Pricing:</b><br><br>🔥 <b>Starter</b> — UGX 300,000/mo<br>• AI Sales Agent on your site<br>• Lead capture & qualification<br>• Email support<br><br>⚡ <b>Growth</b> — UGX 500,000/mo<br>• Everything in Starter<br>• SWOT analysis per lead<br>• Automated follow-ups<br>• Priority support<br><br>🤖 <b>Web Admin Add-on</b> — UGX 300,000/mo<br>• Manage your site via Telegram<br>• Cyber Shield security monitoring<br><br>Pay via MTN MoMo or Airtel Money."
+    answer: "💰 <b>Blaze256 Pricing:</b><br><br>🔥 <b>Starter</b> — UGX 300,000/mo<br>• AI Sales Agent on your site<br>• Lead capture & qualification<br>• Email support<br><br>⚡ <b>Growth</b> — UGX 500,000/mo<br>• Everything in Starter<br>• SWOT analysis per lead<br>• Automated follow-ups<br>• Priority support<br><br>🤖 <b>Web Admin Add-on</b> — UGX 250,000/mo<br>• Manage your site via Telegram<br>• Cyber Shield security monitoring<br><br>Pay via MTN MoMo or Airtel Money."
   },
   getstarted: {
     keywords: ['get started','start','setup','install','how to','begin','sign up','signup','register','onboard'],
@@ -1598,7 +1612,7 @@ var WA_KB = {
   },
   webadmin: {
     keywords: ['web admin','webadmin','telegram','bot','content','update site','cms','edit site','manage site'],
-    answer: "🤖 <b>Web Admin — AI Site Manager:</b><br><br>Send a Telegram message → your site updates automatically!<br><br>✅ Update text, images & content<br>✅ Add blog posts & articles<br>✅ Cyber Shield security monitoring<br>✅ Works on WordPress & GitHub sites<br><br>📱 Just message <b>@blaze256admin_bot</b> on Telegram.<br><br>Add-on price: <b>UGX 300,000/mo</b>"
+    answer: "🤖 <b>Web Admin — AI Site Manager:</b><br><br>Send a Telegram message → your site updates automatically!<br><br>✅ Update text, images & content<br>✅ Add blog posts & articles<br>✅ Cyber Shield security monitoring<br>✅ Works on WordPress & GitHub sites<br><br>📱 Just message <b>@blaze256admin_bot</b> on Telegram.<br><br>Add-on price: <b>UGX 250,000/mo</b>"
   },
   wordpress: {
     keywords: ['wordpress','wix','shopify','webflow','html','website','platform','compatible','support','works with'],
