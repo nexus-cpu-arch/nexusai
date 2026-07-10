@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blaze256 — AI Sales Agent for Your Business</title>
   <meta name="description" content="Blaze256 deploys a 24/7 AI sales agent on your website that captures, qualifies and nurtures leads automatically. Deploy in 2 minutes."/>
@@ -383,6 +386,23 @@
     .hero h1, .hero-left h1 { visibility: visible !important; opacity: 1 !important; display: block !important; }
     /* Section headlines */
     .sec-title { visibility: visible !important; opacity: 1 !important; }
+
+    /* ── STRUCTURAL ID OVERRIDES (blazeHero swap) ── */
+    #blazeHero { position: relative; overflow: hidden; }
+    #heroGrid { 
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      padding: 120px 5% 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+    }
+    @media (max-width: 900px) {
+      #heroGrid { grid-template-columns: 1fr; gap: 48px; padding: 100px 5% 60px; }
+    }
 </style>
 </head>
 <body>
@@ -416,7 +436,8 @@
 
 <!-- HERO -->
 <div style="max-width:1280px;margin:0 auto;padding:0 5%">
-  <div class="hero">
+  <section id="blazeHero" style="position:relative;overflow:hidden">
+<div id="heroGrid" class="hero">
     <div class="hero-left">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
@@ -495,6 +516,7 @@
       </div>
     </div>
   </div>
+</section>
 </div>
 
 <!-- TRUSTED BY -->
