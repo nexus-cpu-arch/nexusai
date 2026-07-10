@@ -278,7 +278,7 @@
     .footer-link:hover{color:var(--muted2)}
 
     /* ─── RESPONSIVE ─── */
-    @media(max-width:900px){
+    @media (max-width:900px){
       .hero{grid-template-columns:1fr;gap:48px;padding:100px 5% 60px}
       .hero-right{display:none}
       .how-flow{grid-template-columns:1fr 1fr;gap:32px}
@@ -294,8 +294,10 @@
       nav .nav-links{display:none}
       footer{flex-direction:column;align-items:flex-start}
     }
-    @media(max-width:600px){
-      .bento{grid-template-columns:1fr}
+    @media (max-width:600px){
+      .bento{grid-template-columns:1fr
+      .footer-right{flex-direction:column;align-items:center;gap:10px}
+      }
       .bento-card.wide{grid-column:span 1}
       .how-flow{grid-template-columns:1fr}
     }
@@ -319,7 +321,7 @@
     .an-bar-track{flex:1;height:6px;background:var(--border2);border-radius:4px;overflow:hidden}
     .an-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#6366f1,#818cf8)}
     .an-bar-pct{font-size:11px;color:var(--muted2);width:32px;text-align:right}
-    @media(max-width:900px){.kb-split{grid-template-columns:1fr}.analytics-cards{grid-template-columns:1fr}}
+    @media (max-width:900px){.kb-split{grid-template-columns:1fr}.analytics-cards{grid-template-columns:1fr}}
 
     /* ─── WHATSAPP AI SECTION ─── */
     #whatsappai{background:linear-gradient(180deg,var(--dark) 0%,#071a0f 100%)}
@@ -338,8 +340,8 @@
     .wai-step h5{font-size:13px;font-weight:700;margin:0 0 6px;color:#fff}
     .wai-step p{font-size:12px;color:rgba(255,255,255,.45);margin:0;line-height:1.5}
     .wai-cta-row{display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap}
-    @media(max-width:900px){.wai-grid{grid-template-columns:1fr 1fr}.wai-how{grid-template-columns:1fr 1fr;gap:24px}.wai-how::after{display:none}}
-    @media(max-width:600px){.wai-grid{grid-template-columns:1fr}.wai-how{grid-template-columns:1fr}}
+    @media (max-width:900px){.wai-grid{grid-template-columns:1fr 1fr}.wai-how{grid-template-columns:1fr 1fr;gap:24px}.wai-how::after{display:none}}
+    @media (max-width:600px){.wai-grid{grid-template-columns:1fr}.wai-how{grid-template-columns:1fr}}
 
     /* ─── WEB ADMIN SECTION ─── */
     #webadmin{background:var(--dark)}
@@ -365,8 +367,8 @@
     .wa-msg.bot{background:var(--dark2);color:var(--muted2);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border)}
     .wa-msg .wa-sender{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;opacity:.7}
     .wa-cta-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:48px}
-    @media(max-width:900px){.wa-steps{grid-template-columns:repeat(2,1fr)}.wa-steps::after{display:none}.wa-bento{grid-template-columns:1fr}}
-    @media(max-width:480px){.wa-steps{grid-template-columns:1fr}}
+    @media (max-width:900px){.wa-steps{grid-template-columns:repeat(2,1fr)}.wa-steps::after{display:none}.wa-bento{grid-template-columns:1fr}}
+    @media (max-width:480px){.wa-steps{grid-template-columns:1fr}}
 
   </style>
 </head>
