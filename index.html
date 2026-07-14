@@ -75,7 +75,7 @@ body{background:var(--dark);color:var(--text);font-family:'Inter',system-ui,sans
 .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}
 .btn-outline:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.04)}
 /* ─── HERO ─── */
-    .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:120px 5% 80px;max-width:1280px;margin:0 auto;position:relative}
+    .hero{overflow:hidden;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:120px 5% 80px;max-width:1280px;margin:0 auto;position:relative}
 .hero-bg{position:absolute;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
 .hero-orb1{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.1) 0%,transparent 65%);top:-200px;left:-100px;filter:blur(60px)}
 .hero-orb2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.07) 0%,transparent 65%);bottom:-100px;right:-50px;filter:blur(60px)}
@@ -386,7 +386,7 @@ footer p{font-size:12px;color:var(--muted)}
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="logo">
+  <a href="#top" class="logo">
     <img src="https://base44.app/api/apps/6a070c2e1b2d3fb43fda5d79/files/mp/public/6a070c2e1b2d3fb43fda5d79/a12374e87_e0c7caad8_Print_Transparent.svg" alt="Blaze256" style="height:58px;width:auto;object-fit:contain;" />
   </a>
   <ul class="nav-links">
@@ -919,7 +919,7 @@ footer p{font-size:12px;color:var(--muted)}
         </div>
         <div class="demo-heading">Talk to Blaze.<br/>Right now.</div>
         <p class="demo-body">The orange bubble in the bottom-right corner is your AI agent in action. Click it and have a real conversation — exactly like your customers will experience it.</p>
-        <a href="#" class="demo-pointer" onclick="document.querySelector('.blaze256-widget-btn')?.click();return false;">
+        <a href="#top" class="demo-pointer" onclick="document.querySelector('.blaze256-widget-btn')?.click();return false;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           Click the orange bubble → bottom right
         </a>
