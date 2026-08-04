@@ -1723,5 +1723,22 @@ setTimeout(function() {
 <!-- ========== END WHATSAPP WIDGET ========== -->
 
 </script>
+
+<script>
+// Blaze256 engagement tracking
+(function(){
+  var milestones=[25,50,75,90,100], sent={};
+  function trackScroll(){
+    var doc=document.documentElement, max=doc.scrollHeight-doc.clientHeight;
+    if(max<=0) return;
+    var pct=Math.round((window.scrollY/max)*100);
+    milestones.forEach(function(m){
+      if(pct>=m && !sent[m]){ sent[m]=true; if(window.naiTrack) naiTrack('scroll_depth','engagement',String(m)); }
+    });
+  }
+  window.addEventListener('scroll',trackScroll,{passive:true});
+  window.addEventListener('load',trackScroll);
+})();
+</script>
 </body>
 </html>
